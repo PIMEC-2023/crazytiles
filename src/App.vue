@@ -14,10 +14,14 @@ const isPlaying = ref(false)
 // const isFlipped = ref(false)
 
 // Referencia a la primera carta volteada
-const firstSelectedCard = ref(0)
+const firstSelectedCard = ref(null)
 
 // Referencia a la segunda carta volteada
-const secondSelectedCard = ref(14)
+const secondSelectedCard = ref(null)
+
+// Array con cartas acertadas
+
+const matches = ref([])
 
 const newGame = () => {
   if (dimensions.value % 2 !== 0) {
@@ -25,6 +29,32 @@ const newGame = () => {
     }
   console.log("Game starts");
   isPlaying.value = true
+}
+
+const checkCards = (card, index) => {
+  
+  
+  if (firstSelectedCard.value === null) {
+    //First click
+    firstSelectedCard.value = index
+  }
+  else {
+    secondSelectedCard.value = index
+   
+  }
+  if (firstSelectedCard.value !== null && secondSelectedCard.value !== null) {
+    console.log('Ninguno es null');
+    
+    if (cards.value[firstSelectedCard.value] === cards.value[secondSelectedCard.value] ) {
+      console.log('Hago push?');
+      matches.value.push(card)
+    }
+   
+    firstSelectedCard.value = null
+    secondSelectedCard.value = null
+    //Falta comprobar si ha acabado el juego
+  }
+
 }
 
 
@@ -35,7 +65,7 @@ const newGame = () => {
     <h1>Crazy Tiles</h1>
     <section v-if="isPlaying"  class="game" >
       <article v-for="(card, index) in cards" :key="index">
-        <div><span>{{ card }}</span></div>
+        <button @click="checkCards(card, index)"><span v-if="firstSelectedCard == index || secondSelectedCard == index">{{ card }}</span></button>
       </article>
     </section>
     <section v-else>
@@ -49,7 +79,7 @@ const newGame = () => {
       display: flex;
       width: 50%;
     }
-    div { 
+    button { 
       box-sizing: border-box;
       width: 50px; 
       height: 50px; 
@@ -57,7 +87,7 @@ const newGame = () => {
       padding: 0;  
       border: 1px solid #404040; 
     }
-    span{
-      visibility: hidden;
-    }
+
+   
+   
 </style>
