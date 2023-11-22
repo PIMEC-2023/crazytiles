@@ -16,14 +16,27 @@ const board = () => {
   for (let i = 1; i <= totalTiles / 2; i++) {
     tilesArray.push(i);
   }
+  shuffleArray(tilesArray)
   return tilesArray;
 };
+
+const shuffleArray = array => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+}
 
 // Valores de las cartas
 const cards = ref(board());
 
 // Variable que designa si estamos jugando o no
 const isPlaying = ref(false);
+
+// Variable que designa si hemos terminado la partida
+const isFinished = ref(false)
 
 // Variable que designa si debemos girar una carta o no
 // const isFlipped = ref(false)
@@ -44,6 +57,7 @@ const newGame = () => {
   // }
   console.log("Game starts");
   isPlaying.value = true;
+  isFinished.value = false
 };
 
 let firstClick = false;
@@ -80,6 +94,7 @@ const checkCards = (card, index) => {
 
     // comprobación end game
     if (matches.value.length * 2 === cards.value.length) {
+      isFinished.value = true;
       isPlaying.value = false;
       matches.value = [];
     }
@@ -118,7 +133,10 @@ const disappearCard = (card) => {
       </article>
     </section>
     <section v-else>
-      <button @click="newGame">Start Game</button>
+      <button @click="newGame">{{ isFinished ? "New Game" : "Start Game" }}</button>
+    </section>
+    <section v-show="isFinished">
+      <h2>Has ganado</h2>
     </section>
   </main>
 </template>
