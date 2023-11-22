@@ -5,6 +5,7 @@ import { ref } from "vue";
 const dimensionsX = ref(4);
 const dimensionsY = ref(4);
 
+// en el caso de que se aplique que el usuario elija el tamaño del tablero X - Y:
 const board = () => {
   const tilesArray = [];
   const totalTiles = dimensionsX.value * dimensionsY.value;
@@ -33,11 +34,11 @@ const firstSelectedCard = ref(null);
 // Referencia a la segunda carta volteada
 const secondSelectedCard = ref(null);
 
-// Array con cartas acertadas
-
+// Array con cartas acertadas (quizás no necesitamos que sea ref.)
 const matches = ref([]);
 
 const newGame = () => {
+  // SI FINALMENTE IMPLEMENTAMOS ELECCION TABLERO (X, Y) NO SE NECESITA:
   // if (dimensions.value % 2 !== 0) {
   //   throw new Error("The dimension of the board must be an even number.");
   // }
@@ -45,13 +46,14 @@ const newGame = () => {
   isPlaying.value = true;
 };
 
-let isTimeoutActive = false;
 let firstClick = false;
+let isTimeoutActive = false;
 
 const checkCards = (card, index) => {
   if (isTimeoutActive) {
     return;
   }
+
   if (firstClick === false) {
     firstSelectedCard.value = index;
     firstClick = true;
@@ -59,6 +61,7 @@ const checkCards = (card, index) => {
     secondSelectedCard.value = index;
     firstClick = false;
   }
+
   if (firstSelectedCard.value !== null && secondSelectedCard.value !== null) {
     if (
       cards.value[firstSelectedCard.value] ===
@@ -66,6 +69,7 @@ const checkCards = (card, index) => {
     ) {
       matches.value.push(card);
     }
+
     isTimeoutActive = true;
 
     setTimeout(() => {
@@ -73,11 +77,20 @@ const checkCards = (card, index) => {
       secondSelectedCard.value = null;
       isTimeoutActive = false;
     }, 1000);
+    
+    // comprobación end game
     if (matches.value.length * 2 === cards.value.length) {
       isPlaying.value = false;
       matches.value = [];
     }
   }
+};
+
+const disappearCard = (card) => {
+  return {
+    opacity: matches.value.includes(card) ? "0" : "1",
+    transition: "opacity 1s",
+  };
 };
 </script>
 
@@ -94,13 +107,10 @@ const checkCards = (card, index) => {
           class="tile"
           @click="checkCards(card, index)"
           :disabled="matches.includes(card)"
+          :style="disappearCard(card)"
         >
           <span
-            v-show="
-              firstSelectedCard == index ||
-              secondSelectedCard == index ||
-              matches.includes(card)
-            "
+            v-show="firstSelectedCard == index || secondSelectedCard == index"
             >{{ card }}</span
           >
         </button>
@@ -129,6 +139,7 @@ article {
   margin: 0;
   padding: 0;
   border: 1px solid #404040;
+  color: red;
   /* background-image: url(./assets/images/perro.jpeg); */
 }
 </style>
