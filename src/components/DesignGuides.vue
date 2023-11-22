@@ -2,7 +2,7 @@
 
 import logo from "../assets/imgs/logo-crazytiles.svg";
 import isotype from "../assets/imgs/logo-isotype.svg";
-import { ColorBox } from "./ColorBox.vue";
+import ColorBox from "./ColorBox.vue";
 
 </script>
 
@@ -37,7 +37,7 @@ import { ColorBox } from "./ColorBox.vue";
     <h2>Colors</h2>
     <div class="palette">
       <!--Color Box-->
-      <ColorBox />
+      <ColorBox  />
     </div>
   </section>
 </template>
