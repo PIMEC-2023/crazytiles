@@ -1,9 +1,19 @@
 <script setup>
+import { computed } from "@vue/reactivity";
 import { ref } from "vue";
 
 // Dimensiones del tablero
-const dimensionsX = ref(4);
-const dimensionsY = ref(4);
+const dimensionsX = ref(2);
+const dimensionsY = ref(2);
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+};
 
 // en el caso de que se aplique que el usuario elija el tamaño del tablero X - Y:
 const board = () => {
@@ -16,18 +26,45 @@ const board = () => {
   for (let i = 1; i <= totalTiles / 2; i++) {
     tilesArray.push(i);
   }
-  shuffleArray(tilesArray)
+  shuffleArray(tilesArray);
   return tilesArray;
 };
 
-const shuffleArray = array => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
+// intentos
+const attempts = ref(0);
+
+// timer
+const totalSeconds = ref(0);
+const minutes = ref("00");
+const colon = ref(":");
+const seconds = ref("00");
+const showColon = ref(true);
+
+const setTime = () => {
+  if (isPlaying.value) {
+    ++totalSeconds.value;
+    showColon.value = !showColon.value;
   }
-}
+};
+
+setInterval(setTime, 1000);
+
+const pad = (val) => {
+  const valString = val + "";
+  return valString.length < 2 ? "0" + valString : valString;
+};
+
+const formattedTime = computed(() => {
+  const sec = totalSeconds.value % 60;
+  const min = Math.floor(totalSeconds.value / 60);
+
+  seconds.value = pad(sec);
+  minutes.value = pad(min);
+
+  return `${minutes.value}${showColon.value ? colon.value : " "}${
+    seconds.value
+  }`;
+});
 
 // Valores de las cartas
 const cards = ref(board());
@@ -36,7 +73,7 @@ const cards = ref(board());
 const isPlaying = ref(false);
 
 // Variable que designa si hemos terminado la partida
-const isFinished = ref(false)
+const isFinished = ref(false);
 
 // Variable que designa si debemos girar una carta o no
 // const isFlipped = ref(false)
@@ -50,6 +87,18 @@ const secondSelectedCard = ref(null);
 // Array con cartas acertadas (quizás no necesitamos que sea ref.)
 const matches = ref([]);
 
+const withSound = ref(true);
+
+const playSound = (sound) => {
+  if (sound && withSound.value) {
+    var audio = new Audio(sound);
+    return audio;
+  }
+};
+
+const gameMusic = playSound("src/assets/sounds/game-music.wav");
+const clickTile = playSound("src/assets/sounds/click-tile.wav");
+
 const newGame = () => {
   // SI FINALMENTE IMPLEMENTAMOS ELECCION TABLERO (X, Y) NO SE NECESITA:
   // if (dimensions.value % 2 !== 0) {
@@ -57,7 +106,10 @@ const newGame = () => {
   // }
   console.log("Game starts");
   isPlaying.value = true;
-  isFinished.value = false
+  isFinished.value = false;
+  matches.value = [];
+  attempts.value = 0;
+  gameMusic.play();
 };
 
 let firstClick = false;
@@ -71,9 +123,12 @@ const checkCards = (card, index) => {
   if (firstClick === false) {
     firstSelectedCard.value = index;
     firstClick = true;
+    clickTile.play();
   } else {
     secondSelectedCard.value = index;
     firstClick = false;
+    attempts.value++;
+    clickTile.play();
   }
 
   if (firstSelectedCard.value !== null && secondSelectedCard.value !== null) {
@@ -96,7 +151,6 @@ const checkCards = (card, index) => {
     if (matches.value.length * 2 === cards.value.length) {
       isFinished.value = true;
       isPlaying.value = false;
-      matches.value = [];
     }
   }
 };
@@ -107,41 +161,74 @@ const disappearCard = (card) => {
     transition: "opacity 1s",
   };
 };
+
+const handleSound = () => {
+  withSound.value = !withSound.value;
+
+  // Assuming you have a ref for the gameMusic audio element
+  if (gameMusic) {
+    gameMusic.muted = !withSound.value;
+  }
+  if (clickTile) {
+    clickTile.muted = !withSound.value;
+  }
+};
 </script>
 
 <template>
   <main>
     <h1>Crazy Tiles</h1>
-    <section
-      v-if="isPlaying"
-      class="game"
-      :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
-    >
-      <article v-for="(card, index) in cards" :key="index">
-        <button
-          class="tile"
-          @click="checkCards(card, index)"
-          :disabled="matches.includes(card)"
-          :style="disappearCard(card)"
-        >
-          <!-- v-show="!matches.includes(card)" -->
-          <span
-            v-show="firstSelectedCard == index || secondSelectedCard == index"
-            >{{ card }}</span
+    <div class="main-page-game" v-if="isPlaying">
+      <div class="timer">⏰ {{ formattedTime }}</div>
+      <section
+        class="game"
+        :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
+      >
+        <article v-for="(card, index) in cards" :key="index">
+          <button
+            class="tile"
+            @click="checkCards(card, index)"
+            :disabled="matches.includes(card)"
+            :style="disappearCard(card)"
           >
+            <!-- v-show="!matches.includes(card)" -->
+            <span
+              v-show="firstSelectedCard == index || secondSelectedCard == index"
+              >{{ card }}</span
+            >
+          </button>
+        </article>
+      </section>
+      <div>
+        <div>Intentos: {{ attempts }}</div>
+        <div>Aciertos: {{ matches.length }}</div>
+        <button @click="handleSound">
+          {{ withSound ? "🔇" : "🔊" }}
         </button>
-      </article>
-    </section>
+      </div>
+    </div>
     <section v-else>
-      <button @click="newGame">{{ isFinished ? "New Game" : "Start Game" }}</button>
+      <button @click="newGame">
+        {{ isFinished ? "New Game" : "Start Game" }}
+      </button>
     </section>
     <section v-show="isFinished">
-      <h2>Has ganado</h2>
+      <h2>¡Has ganado!</h2>
+      <p>Tiempo transcurrido: {{ minutes + colon + seconds }}</p>
+      <p>Intentos: {{ attempts }}</p>
+      <p>Aciertos: {{ matches.length }}</p>
     </section>
   </main>
 </template>
 
 <style scoped>
+.main-page-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 .game {
   display: grid;
   justify-content: center;
