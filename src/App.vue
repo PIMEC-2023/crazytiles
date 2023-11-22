@@ -7,9 +7,9 @@ const dimensionsY = ref(4);
 
 // en el caso de que se aplique que el usuario elija el tamaño del tablero X - Y:
 const board = () => {
+  // aquí realmente se pondra el array de fotos o símbolos
   const tilesArray = [];
   const totalTiles = dimensionsX.value * dimensionsY.value;
-  // aquí realmente se pondra el array de fotos o símbolos
   for (let i = 1; i <= totalTiles / 2; i++) {
     tilesArray.push(i);
   }
@@ -77,7 +77,7 @@ const checkCards = (card, index) => {
       secondSelectedCard.value = null;
       isTimeoutActive = false;
     }, 1000);
-    
+
     // comprobación end game
     if (matches.value.length * 2 === cards.value.length) {
       isPlaying.value = false;
@@ -109,6 +109,7 @@ const disappearCard = (card) => {
           :disabled="matches.includes(card)"
           :style="disappearCard(card)"
         >
+          <!-- v-show="!matches.includes(card)" -->
           <span
             v-show="firstSelectedCard == index || secondSelectedCard == index"
             >{{ card }}</span
