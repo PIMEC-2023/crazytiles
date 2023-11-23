@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
 
+import DesignGuides from './components/DesignGuides.vue';
+
 // Dimensiones del tablero
 const dimensionsX = ref(4);
 const dimensionsY = ref(4);
@@ -110,6 +112,8 @@ const disappearCard = (card) => {
 </script>
 
 <template>
+    <DesignGuides />
+
   <main>
     <h1>Crazy Tiles</h1>
     <section
