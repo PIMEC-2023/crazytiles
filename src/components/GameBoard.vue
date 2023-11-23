@@ -3,9 +3,14 @@
 
 import { ref } from "vue";
 
+import errorAudio from "@/assets/audio/error.mp3";
+import flipCardAudio from "@/assets/audio/flipcard.mp3";
+import successAudio from "@/assets/audio/success_bell.mp3";
+import victoryAudio from "@/assets/audio/victory.mp3";
+
 // Dimensiones del tablero
-const dimensionsX = ref(4);
-const dimensionsY = ref(4);
+const dimensionsX = ref(2);
+const dimensionsY = ref(2);
 
 // en el caso de que se aplique que el usuario elija el tamaño del tablero X - Y:
 const board = () => {
@@ -39,6 +44,9 @@ const isPlaying = ref(false);
 
 // Variable que designa si hemos terminado la partida
 const isFinished = ref(false)
+
+// Variable que designa si hemos acertado o no la pareja
+const success = ref(false)
 
 // Variable que designa si debemos girar una carta o no
 // const isFlipped = ref(false)
@@ -77,29 +85,31 @@ const checkCards = (card, index) => {
         secondSelectedCard.value = index;
         firstClick = false;
     }
+    playAudio(flipCardAudio, 0.1);
 
-    if (firstSelectedCard.value !== null && secondSelectedCard.value !== null) {
-        if (
-            cards.value[firstSelectedCard.value] ===
-            cards.value[secondSelectedCard.value]
-        ) {
+    if (secondSelectedCard.value !== null) {
+        if (cards.value[firstSelectedCard.value] === cards.value[secondSelectedCard.value]) {
+            success.value = true
             matches.value.push(card);
+        }else {
+            success.value = false;
         }
-
         isTimeoutActive = true;
 
         setTimeout(() => {
+        // comprobación end game
+        if (matches.value.length * 2 === cards.value.length) {
+            playAudio(victoryAudio, 0.3);
+            isFinished.value = true;
+            isPlaying.value = false;
+            matches.value = [];
+            return
+        }
+            success.value ? playAudio(successAudio, 0.4) : playAudio(errorAudio, 0.1);
             firstSelectedCard.value = null;
             secondSelectedCard.value = null;
             isTimeoutActive = false;
         }, 1000);
-
-        // comprobación end game
-        if (matches.value.length * 2 === cards.value.length) {
-            isFinished.value = true;
-            isPlaying.value = false;
-            matches.value = [];
-        }
     }
 };
 
@@ -109,6 +119,13 @@ const disappearCard = (card) => {
         transition: "opacity 1s",
     };
 };
+
+function playAudio(audioFile, soundVolume){
+    var audio = new Audio(audioFile)
+    audio.volume = soundVolume
+    audio.play();
+}
+
 </script>
 
 <template>
