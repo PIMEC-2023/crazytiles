@@ -90,10 +90,8 @@ const matches = ref([]);
 const withSound = ref(true);
 
 const playSound = (sound) => {
-  if (sound && withSound.value) {
-    var audio = new Audio(sound);
-    return audio;
-  }
+  const audio = new Audio(sound);
+  return audio;
 };
 
 const gameMusicSound = playSound("src/assets/sounds/game-music.wav");
@@ -102,10 +100,6 @@ const matchSound = playSound("src/assets/sounds/match.wav");
 const winSound = playSound("src/assets/sounds/win.wav");
 
 const newGame = () => {
-  // SI FINALMENTE IMPLEMENTAMOS ELECCION TABLERO (X, Y) NO SE NECESITA:
-  // if (dimensions.value % 2 !== 0) {
-  //   throw new Error("The dimension of the board must be an even number.");
-  // }
   console.log("Game starts");
   isPlaying.value = true;
   isFinished.value = false;
