@@ -96,8 +96,10 @@ const playSound = (sound) => {
   }
 };
 
-const gameMusic = playSound("src/assets/sounds/game-music.wav");
-const clickTile = playSound("src/assets/sounds/click-tile.wav");
+const gameMusicSound = playSound("src/assets/sounds/game-music.wav");
+const clickTileSound = playSound("src/assets/sounds/click-tile.wav");
+const matchSound = playSound("src/assets/sounds/match.wav");
+const winSound = playSound("src/assets/sounds/win.wav");
 
 const newGame = () => {
   // SI FINALMENTE IMPLEMENTAMOS ELECCION TABLERO (X, Y) NO SE NECESITA:
@@ -109,7 +111,8 @@ const newGame = () => {
   isFinished.value = false;
   matches.value = [];
   attempts.value = 0;
-  gameMusic.play();
+  gameMusicSound.play();
+  gameMusicSound.loop = true;
 };
 
 let firstClick = false;
@@ -123,12 +126,12 @@ const checkCards = (card, index) => {
   if (firstClick === false) {
     firstSelectedCard.value = index;
     firstClick = true;
-    clickTile.play();
+    clickTileSound.play();
   } else {
     secondSelectedCard.value = index;
     firstClick = false;
     attempts.value++;
-    clickTile.play();
+    clickTileSound.play();
   }
 
   if (firstSelectedCard.value !== null && secondSelectedCard.value !== null) {
@@ -137,6 +140,7 @@ const checkCards = (card, index) => {
       cards.value[secondSelectedCard.value]
     ) {
       matches.value.push(card);
+      matchSound.play();
     }
 
     isTimeoutActive = true;
@@ -151,6 +155,9 @@ const checkCards = (card, index) => {
     if (matches.value.length * 2 === cards.value.length) {
       isFinished.value = true;
       isPlaying.value = false;
+      winSound.play();
+      gameMusicSound.pause();
+      gameMusicSound.currentTime = 0;
     }
   }
 };
@@ -165,12 +172,12 @@ const disappearCard = (card) => {
 const handleSound = () => {
   withSound.value = !withSound.value;
 
-  // Assuming you have a ref for the gameMusic audio element
-  if (gameMusic) {
-    gameMusic.muted = !withSound.value;
+  // Assuming you have a ref for the gameMusicSound audio element
+  if (gameMusicSound) {
+    gameMusicSound.muted = !withSound.value;
   }
-  if (clickTile) {
-    clickTile.muted = !withSound.value;
+  if (clickTileSound) {
+    clickTileSound.muted = !withSound.value;
   }
 };
 </script>
