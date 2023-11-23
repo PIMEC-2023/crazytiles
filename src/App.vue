@@ -49,8 +49,8 @@ const setTime = () => {
 
 setInterval(setTime, 1000);
 
-const pad = (val) => {
-  const valString = val + "";
+const pad = (value) => {
+  const valString = value + "";
   return valString.length < 2 ? "0" + valString : valString;
 };
 
@@ -166,12 +166,17 @@ const disappearCard = (card) => {
 const handleSound = () => {
   withSound.value = !withSound.value;
 
-  // Assuming you have a ref for the gameMusicSound audio element
   if (gameMusicSound) {
     gameMusicSound.muted = !withSound.value;
   }
   if (clickTileSound) {
     clickTileSound.muted = !withSound.value;
+  }
+  if (matchSound) {
+    matchSound.muted = !withSound.value;
+  }
+  if (winSound) {
+    winSound.muted = !withSound.value;
   }
 };
 </script>
