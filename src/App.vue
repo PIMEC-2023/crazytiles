@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 
-import DesignGuides from './components/DesignGuides.vue';
+// import DesignGuides from './components/DesignGuides.vue';
 
 // Dimensiones del tablero
 const dimensionsX = ref(4);
@@ -112,27 +112,17 @@ const disappearCard = (card) => {
 </script>
 
 <template>
-    <DesignGuides />
+  <!-- Descomentar el componente si quereis ver la guía de estilos de la app  -->
+  <!-- <DesignGuides /> -->
 
   <main>
     <h1>Crazy Tiles</h1>
-    <section
-      v-if="isPlaying"
-      class="game"
-      :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
-    >
+    <section v-if="isPlaying" class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
       <article v-for="(card, index) in cards" :key="index">
-        <button
-          class="tile"
-          @click="checkCards(card, index)"
-          :disabled="matches.includes(card)"
-          :style="disappearCard(card)"
-        >
+        <button class="tile" @click="checkCards(card, index)" :disabled="matches.includes(card)"
+          :style="disappearCard(card)">
           <!-- v-show="!matches.includes(card)" -->
-          <span
-            v-show="firstSelectedCard == index || secondSelectedCard == index"
-            >{{ card }}</span
-          >
+          <span v-show="firstSelectedCard == index || secondSelectedCard == index">{{ card }}</span>
         </button>
       </article>
     </section>
@@ -155,6 +145,7 @@ article {
   width: 50px;
   height: 50px;
 }
+
 .tile {
   box-sizing: border-box;
   width: 100%;
