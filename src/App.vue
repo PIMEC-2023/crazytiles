@@ -3,6 +3,7 @@
 import ConfigPage from "@/components/ConfigPage.vue";
 import GameBoard from "@/components/GameBoard.vue";
 
+
 </script>
 
 <template>

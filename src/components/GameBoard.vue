@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import CardTile from "./CardTile.vue";
+import { computed } from "@vue/reactivity";
 
 // Dimensiones del tablero
 const dimensionsX = ref(3);
@@ -22,25 +23,28 @@ const fruitsArray = ref([
   "taronja.svg",
 ]);
 
+const chooseTheme = ref("");
+
 // en el caso de que se aplique que el usuario elija el tamaño del tablero X - Y:
 const board = () => {
   // aquí realmente se pondra el array de fotos o símbolos
   const tilesArray = [];
   const totalTiles = dimensionsX.value * dimensionsY.value;
-  shuffleArray(fruitsArray.value);
-  for (let i = 0; i < totalTiles / 2; i++) {
-    tilesArray.push(`${fruitsRute}${fruitsArray.value[i]}`);
-  }
-  tilesArray.push(...tilesArray);
-  shuffleArray(tilesArray);
 
-  // fruitsAray.forEach((f) => tilesArray.push(f))
-  // este sería para los números, se puede poner un if al principio de la funcion
-  //   for (let i = 1; i <= totalTiles / 2; i++) {
-  //     tilesArray.push(i);
-  //   }
-  //   for (let i = 1; i <= totalTiles / 2; i++) {
-  //     tilesArray.push(i);
+  if (chooseTheme.value === "numbers") {
+    for (let i = 1; i <= totalTiles / 2; i++) {
+      tilesArray.push(i);
+    }
+    tilesArray.push(...tilesArray);
+  }
+  if (chooseTheme.value === "fruits") {
+    shuffleArray(fruitsArray.value);
+    for (let i = 0; i < totalTiles / 2; i++) {
+      tilesArray.push(`${fruitsRute}${fruitsArray.value[i]}`);
+    }
+    tilesArray.push(...tilesArray);
+  }
+  shuffleArray(tilesArray);
   return tilesArray;
 };
 
@@ -53,10 +57,8 @@ const shuffleArray = (array) => {
   }
 };
 
-let cardBoard = board();
-
 // Valores de las cartas
-const cards = ref(cardBoard);
+const cards = ref([]);
 
 // Variable que designa si estamos jugando o no
 const isPlaying = ref(false);
@@ -80,7 +82,10 @@ const newGame = () => {
   console.log("Game starts");
   isPlaying.value = true;
   isFinished.value = false;
-  cardBoard = board();
+  cards.value = board();
+  matches.value = [];
+  attempts.value = 0;
+  totalSeconds.value = 0;
 };
 
 let firstClick = false;
@@ -99,6 +104,7 @@ const checkCards = (card, index) => {
   } else {
     secondSelectedCard.value = index;
     firstClick = false;
+    attempts.value++;
   }
 
   if (firstSelectedCard.value !== null && secondSelectedCard.value !== null) {
@@ -117,11 +123,9 @@ const checkCards = (card, index) => {
       isTimeoutActive = false;
     }, 1000);
 
-    // comprobación end game
     if (matches.value.length * 2 === cards.value.length) {
       isFinished.value = true;
       isPlaying.value = false;
-      matches.value = [];
     }
   }
 };
@@ -132,41 +136,109 @@ const disappearCard = (card) => {
     transition: "opacity 1s",
   };
 };
+
+const attempts = ref(0);
+
+const totalSeconds = ref(0);
+const minutes = ref("00");
+const colon = ref(":");
+const seconds = ref("00");
+const showColon = ref(true);
+
+const setTime = () => {
+  if (isPlaying.value) {
+    ++totalSeconds.value;
+    showColon.value = !showColon.value;
+  }
+};
+
+setInterval(setTime, 1000);
+
+const pad = (value) => {
+  const valString = value + "";
+  return valString.length < 2 ? "0" + valString : valString;
+};
+
+const formattedTime = computed(() => {
+  const sec = totalSeconds.value % 60;
+  const min = Math.floor(totalSeconds.value / 60);
+
+  seconds.value = pad(sec);
+  minutes.value = pad(min);
+
+  return `${minutes.value}${showColon.value ? colon.value : " "}${
+    seconds.value
+  }`;
+});
 </script>
 
 <template>
   <h1>Crazy Tiles</h1>
   <main>
-    <section
-      v-if="isPlaying"
-      class="game"
-      :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
-    >
-      <article v-for="(card, index) in cards" :key="index">
-        <CardTile
-          :imageUrl="
-            firstSelectedCard == index || secondSelectedCard == index
-              ? card
-              : tileBackPic
-          "
-          @click="checkCards(card, index)"
-          :disabled="matches.includes(card)"
-          :style="disappearCard(card)"
-        />
-      </article>
-    </section>
+    <div v-if="isPlaying" class="main-page-game">
+      <div class="timer">⏰ {{ formattedTime }}</div>
+      <section
+        class="game"
+        :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
+      >
+        <article v-for="(card, index) in cards" :key="index">
+          <div v-if="chooseTheme === 'fruits'">
+            <CardTile
+              :imageUrl="
+                firstSelectedCard == index || secondSelectedCard == index
+                  ? card
+                  : tileBackPic
+              "
+              @click="checkCards(card, index)"
+              :disabled="matches.includes(card)"
+              :style="disappearCard(card)"
+            />
+          </div>
+          <div v-else-if="chooseTheme === 'numbers'">
+            <CardTile
+              :imageUrl="
+                firstSelectedCard == index || secondSelectedCard == index
+                  ? null
+                  : tileBackPic
+              "
+              :number="card"
+              @click="checkCards(card, index)"
+              :disabled="matches.includes(card)"
+              :style="disappearCard(card)"
+            />
+          </div>
+        </article>
+      </section>
+      <div>
+        <div>Intentos: {{ attempts }}</div>
+        <div>Aciertos: {{ matches.length }}</div>
+      </div>
+    </div>
     <section v-else>
       <button @click="newGame">
         {{ isFinished ? "New Game" : "Start Game" }}
       </button>
+      <h3>Temàtica</h3>
+      <input type="radio" v-model="chooseTheme" value="numbers" />números
+      <input type="radio" v-model="chooseTheme" value="fruits" />fruites
+      <input type="radio" v-model="chooseTheme" value="pics" />personalitzat
     </section>
     <section v-show="isFinished">
-      <h2>Has ganado</h2>
+      <h2>¡Has ganado!</h2>
+      <p>Tiempo transcurrido: {{ minutes + colon + seconds }}</p>
+      <p>Intentos: {{ attempts }}</p>
+      <p>Aciertos: {{ matches.length }}</p>
     </section>
   </main>
 </template>
 
 <style scoped>
+.main-page-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
 .game {
   display: grid;
   justify-content: center;

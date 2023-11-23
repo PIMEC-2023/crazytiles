@@ -1,13 +1,12 @@
 <script setup>
-defineProps(["imageUrl"]);
+defineProps(["imageUrl", "number"]);
 </script>
 
 <template>
   <div>
-    <button
-      :style="{ backgroundImage: `url(${imageUrl})` }"
-      class="tile"
-    ></button>
+    <button :style="{ backgroundImage: `url(${imageUrl})` }" class="tile">
+      <span class="number" v-show="!imageUrl">{{ number }}</span>
+    </button>
   </div>
 </template>
 
@@ -23,5 +22,9 @@ div {
   background: url("src/assets/imgs/tile-back.svg") no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+.number {
+    font-size: 3rem;
 }
 </style>
