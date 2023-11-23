@@ -48,6 +48,9 @@ const isFinished = ref(false)
 // Variable que designa si hemos acertado o no la pareja
 const success = ref(false)
 
+// Audio on/off
+const audioOn = ref(true);
+
 // Variable que designa si debemos girar una carta o no
 // const isFlipped = ref(false)
 
@@ -91,20 +94,20 @@ const checkCards = (card, index) => {
         if (cards.value[firstSelectedCard.value] === cards.value[secondSelectedCard.value]) {
             success.value = true
             matches.value.push(card);
-        }else {
+        } else {
             success.value = false;
         }
         isTimeoutActive = true;
 
         setTimeout(() => {
-        // comprobación end game
-        if (matches.value.length * 2 === cards.value.length) {
-            playAudio(victoryAudio, 0.3);
-            isFinished.value = true;
-            isPlaying.value = false;
-            matches.value = [];
-            return
-        }
+            // comprobación end game
+            if (matches.value.length * 2 === cards.value.length) {
+                playAudio(victoryAudio, 0.3);
+                isFinished.value = true;
+                isPlaying.value = false;
+                matches.value = [];
+                return
+            }
             success.value ? playAudio(successAudio, 0.4) : playAudio(errorAudio, 0.1);
             firstSelectedCard.value = null;
             secondSelectedCard.value = null;
@@ -120,7 +123,8 @@ const disappearCard = (card) => {
     };
 };
 
-function playAudio(audioFile, soundVolume){
+function playAudio(audioFile, soundVolume) {
+    if (!audioOn.value) { return }
     var audio = new Audio(audioFile)
     audio.volume = soundVolume
     audio.play();
