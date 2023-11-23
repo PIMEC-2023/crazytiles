@@ -2,7 +2,7 @@
 
 // import DesignGuides from './components/DesignGuides.vue';
 import ConfigPage from "@/components/ConfigPage.vue"
-import GameBoard from "@/components/GameBoard.vue"
+// import GameBoard from "@/components/GameBoard.vue"
 
 </script>
 
@@ -11,7 +11,7 @@ import GameBoard from "@/components/GameBoard.vue"
     <!-- Descomentar el componente si quereis ver la guía de estilos de la app  -->
     <!-- <DesignGuides /> -->
     <ConfigPage />
-    <GameBoard />
+    <!-- <GameBoard /> -->
 
   </div>
 </template>
