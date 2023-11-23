@@ -37,6 +37,10 @@
   margin: 0;
 }
 
+button {
+  border: 0;
+}
+
 body {
   min-height: 100vh;
   color: var(--color-text);

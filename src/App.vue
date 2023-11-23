@@ -1,8 +1,7 @@
 <script setup>
-
 // import DesignGuides from './components/DesignGuides.vue';
-import ConfigPage from "@/components/ConfigPage.vue"
-import GameBoard from "@/components/GameBoard.vue"
+import ConfigPage from "@/components/ConfigPage.vue";
+import GameBoard from "@/components/GameBoard.vue";
 
 </script>
 
