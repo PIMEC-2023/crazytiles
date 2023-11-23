@@ -1,8 +1,8 @@
 <script setup>
 
 // import DesignGuides from './components/DesignGuides.vue';
-import ConfigPage from "@/components/ConfigPage.vue"
-import GameBoard from "@/components/GameBoard.vue"
+import { store } from "./store";
+
 
 </script>
 
@@ -10,9 +10,7 @@ import GameBoard from "@/components/GameBoard.vue"
   <div>
     <!-- Descomentar el componente si quereis ver la guía de estilos de la app  -->
     <!-- <DesignGuides /> -->
-    <ConfigPage />
-    <GameBoard />
-
+    <component :is="store.currentPage" />
   </div>
 </template>
 
