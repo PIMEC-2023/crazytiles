@@ -1,0 +1,13 @@
+<script setup>
+import GameBoard from "@/components/GameBoard.vue"
+import { changePage, store } from "@/store";
+
+</script>
+
+<template>
+    <div>
+        <GameBoard />
+    </div>
+</template>
+
+<style scoped></style>

@@ -1,4 +1,6 @@
 <script setup>
+import { setGameConfig, changePage } from "@/store";
+
 </script>
 
 <template>

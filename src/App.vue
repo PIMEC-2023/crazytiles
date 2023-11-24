@@ -1,18 +1,20 @@
 <script setup>
 
 // import DesignGuides from './components/DesignGuides.vue';
-import ConfigPage from "@/components/ConfigPage.vue"
-// import GameBoard from "@/components/GameBoard.vue"
+import { setGameConfig, changePage, getCurrentPage } from "@/store";
 
+// Para cambiar a otra página
+//changePage("GamePage")
+
+// Para configurar el juego. Ver fichero src/store.js
+// setGameConfig("medium", "images", false)
 </script>
 
 <template>
   <div>
     <!-- Descomentar el componente si quereis ver la guía de estilos de la app  -->
     <!-- <DesignGuides /> -->
-    <ConfigPage />
-    <!-- <GameBoard /> -->
-
+    <component :is="getCurrentPage()" />
   </div>
 </template>
 
