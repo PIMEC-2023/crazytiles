@@ -9,18 +9,15 @@ import { setGameConfig, changePage } from "@/store";
 
         <div id="optionAccess">
             <img src="../assets/imgs/logo-isotype.svg" alt="" class="logo-iso">
-            <button id="button__start">Iniciar el joc</button>
+            <button @click="changePage('GamePage')" id="button__start">Iniciar el joc</button>
             <div id="button__config">Configuració</div>
         </div>
     </main>
 </template>
 
 <style scoped>
-
-
-
 main {
-    background-color: var(--config-bg); 
+    background-color: var(--config-bg);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -34,6 +31,7 @@ main {
     top: 25px;
     right: 25px;
 }
+
 .burger-icon {
     width: 24px;
 }
@@ -43,7 +41,7 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+
 }
 
 .logo-iso {
@@ -63,7 +61,7 @@ main {
     color: var(--config-bg);
     border-color: var(--white);
     margin-bottom: 20px;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.25);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
     appearance: inherit;
 }
 
@@ -79,7 +77,7 @@ main {
     font-size: 24px;
 }
 
-#button__config:hover{
+#button__config:hover {
     cursor: pointer;
 }
 </style>
