@@ -1,11 +1,13 @@
 <script setup>
-defineProps(["imageUrl", "number"]);
+defineProps(["isRevealed"]);
 </script>
 
 <template>
   <div>
-    <button :style="{ backgroundImage: `url(${imageUrl})` }" class="tile">
-      <span class="number" v-show="!imageUrl">{{ number }}</span>
+    <button class="tile" :class="{ revealed: isRevealed }">
+      <span v-show="isRevealed" class="card">
+        <slot />
+      </span>
     </button>
   </div>
 </template>
@@ -24,7 +26,7 @@ div {
   background-position: center;
 }
 
-.number {
-    font-size: 3rem;
+.revealed {
+  background: transparent;
 }
 </style>

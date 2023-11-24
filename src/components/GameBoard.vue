@@ -1,26 +1,37 @@
 <script setup>
 import { ref } from "vue";
 import CardTile from "./CardTile.vue";
-import { computed } from "@vue/reactivity";
+import GameScore from "./GameScore.vue";
+import GameTimer from "./GameTimer.vue";
+
+import { shuffleArray } from "@/assets/utils.js";
+
+import strawberry from "@/assets/imgs/frutas/maduixa.svg";
+import banana from "@/assets/imgs/frutas/platan.svg";
+import orange from "@/assets/imgs/frutas/taronja.svg";
+import peach from "@/assets/imgs/frutas/pressec.svg";
+import blueberries from "@/assets/imgs/frutas/nabius.svg";
+import pear from "@/assets/imgs/frutas/pera.svg";
+import cherries from "@/assets/imgs/frutas/cireres.svg";
+import lemon from "@/assets/imgs/frutas/llimona.svg";
+import grapes from "@/assets/imgs/frutas/raim.svg";
+import kiwi from "@/assets/imgs/frutas/kiwi.svg";
 
 // Dimensiones del tablero
-const dimensionsX = ref(3);
+const dimensionsX = ref(5);
 const dimensionsY = ref(4);
 
-const tileBackPic = "src/assets/imgs/tile-back.svg";
-
-const fruitsRute = "src/assets/imgs/frutas/";
 const fruitsArray = ref([
-  "cireres.svg",
-  "kiwi.svg",
-  "llimona.svg",
-  "maduixa.svg",
-  "nabius.svg",
-  "pera.svg",
-  "platan.svg",
-  "pressec.svg",
-  "raim.svg",
-  "taronja.svg",
+  strawberry,
+  banana,
+  orange,
+  peach,
+  blueberries,
+  pear,
+  cherries,
+  lemon,
+  grapes,
+  kiwi,
 ]);
 
 const chooseTheme = ref("");
@@ -40,21 +51,12 @@ const board = () => {
   if (chooseTheme.value === "fruits") {
     shuffleArray(fruitsArray.value);
     for (let i = 0; i < totalTiles / 2; i++) {
-      tilesArray.push(`${fruitsRute}${fruitsArray.value[i]}`);
+      tilesArray.push(fruitsArray.value[i]);
     }
     tilesArray.push(...tilesArray);
   }
   shuffleArray(tilesArray);
   return tilesArray;
-};
-
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
 };
 
 // Valores de las cartas
@@ -85,7 +87,6 @@ const newGame = () => {
   cards.value = board();
   matches.value = [];
   attempts.value = 0;
-  totalSeconds.value = 0;
 };
 
 let firstClick = false;
@@ -138,80 +139,40 @@ const disappearCard = (card) => {
 };
 
 const attempts = ref(0);
-
-const totalSeconds = ref(0);
-const minutes = ref("00");
-const colon = ref(":");
-const seconds = ref("00");
-const showColon = ref(true);
-
-const setTime = () => {
-  if (isPlaying.value) {
-    ++totalSeconds.value;
-    showColon.value = !showColon.value;
-  }
-};
-
-setInterval(setTime, 1000);
-
-const pad = (value) => {
-  const valString = value + "";
-  return valString.length < 2 ? "0" + valString : valString;
-};
-
-const formattedTime = computed(() => {
-  const sec = totalSeconds.value % 60;
-  const min = Math.floor(totalSeconds.value / 60);
-
-  seconds.value = pad(sec);
-  minutes.value = pad(min);
-
-  return `${minutes.value}${showColon.value ? colon.value : " "}${
-    seconds.value
-  }`;
-});
 </script>
 
 <template>
   <h1>Crazy Tiles</h1>
   <main>
     <div v-if="isPlaying" class="main-page-game">
-      <div class="timer">⏰ {{ formattedTime }}</div>
+      <GameTimer :start="isPlaying" />
       <section
         class="game"
         :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
       >
         <article v-for="(card, index) in cards" :key="index">
-          <div v-if="chooseTheme === 'fruits'">
+          <div>
             <CardTile
-              :imageUrl="
-                firstSelectedCard == index || secondSelectedCard == index
-                  ? card
-                  : tileBackPic
+              :is-revealed="
+                firstSelectedCard === index || secondSelectedCard === index
               "
-              @click="checkCards(card, index)"
               :disabled="matches.includes(card)"
               :style="disappearCard(card)"
-            />
-          </div>
-          <div v-else-if="chooseTheme === 'numbers'">
-            <CardTile
-              :imageUrl="
-                firstSelectedCard == index || secondSelectedCard == index
-                  ? null
-                  : tileBackPic
-              "
-              :number="card"
               @click="checkCards(card, index)"
-              :disabled="matches.includes(card)"
-              :style="disappearCard(card)"
-            />
+            >
+              <img
+                v-if="chooseTheme === 'fruits'"
+                :src="card"
+                :alt="card.substr(24)"
+              />
+              <span v-else-if="chooseTheme === 'numbers'">{{ card }}</span>
+            </CardTile>
           </div>
         </article>
       </section>
-      <div>
-        <div>Intentos: {{ attempts }}</div>
-        <div>Aciertos: {{ matches.length }}</div>
+      <div class="score">
+        <GameScore :score="attempts" text="Intentos"></GameScore>
+        <GameScore :score="matches.length" text="Aciertos"></GameScore>
       </div>
     </div>
     <section v-else>
@@ -225,7 +186,7 @@ const formattedTime = computed(() => {
     </section>
     <section v-show="isFinished">
       <h2>¡Has ganado!</h2>
-      <p>Tiempo transcurrido: {{ minutes + colon + seconds }}</p>
+      <p>Tiempo transcurrido: <GameTimer /></p>
       <p>Intentos: {{ attempts }}</p>
       <p>Aciertos: {{ matches.length }}</p>
     </section>
@@ -242,5 +203,23 @@ const formattedTime = computed(() => {
 .game {
   display: grid;
   justify-content: center;
+  gap: 2px;
+}
+
+.score {
+  display: flex;
+  gap: 10px;
+}
+
+span.card span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+}
+span.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

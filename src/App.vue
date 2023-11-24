@@ -2,8 +2,7 @@
 // import DesignGuides from './components/DesignGuides.vue';
 import ConfigPage from "@/components/ConfigPage.vue";
 import GameBoard from "@/components/GameBoard.vue";
-
-
+import CardTile from "./components/CardTile.vue";
 </script>
 
 <template>
@@ -12,7 +11,7 @@ import GameBoard from "@/components/GameBoard.vue";
     <!-- <DesignGuides /> -->
     <ConfigPage />
     <GameBoard />
-
+    <!-- <CardTile :is-revealed="true"><span><img src="./assets/imgs/frutas/cireres.svg" alt=""></span></CardTile> -->
   </div>
 </template>
 
