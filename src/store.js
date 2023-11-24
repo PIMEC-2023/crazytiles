@@ -1,18 +1,32 @@
 // store.js
-import ConfigPage from "@/components/ConfigPage.vue"
-import GameBoard from "@/components/GameBoard.vue"
+import StartPage from "@/pages/StartPage.vue"
+import GamePage from "@/pages/GamePage.vue"
 
 const pages = {
-    ConfigPage,
-    GameBoard
+    StartPage,
+    GamePage
 }
 
 import { reactive } from 'vue'
 
+/**
+ * 
+ * @param {string} page Página a la que queremos cambiar la app "" 
+ */
 export const changePage = (page) => {
     store.currentPage = pages[page]
 }
 
+export const setGameConfig = (difficulty, gameType, sound) => {
+  store.gameConfig = {difficulty, gameType, sound}
+}
+
 export const store = reactive({
-  currentPage: pages["GameBoard"]
+  currentPage: pages["StartPage"],
+  gameConfig: {
+    difficulty: 'easy', // 'easy' | 'medium' | 'hard'
+    gameType: 'numbers', // 'numbers' | 'images' | 'custom-images'
+    sound: true,
+
+  }
 })

@@ -1,8 +1,7 @@
 <script setup>
 
 // import DesignGuides from './components/DesignGuides.vue';
-import { store } from "./store";
-
+import { setGameConfig, changePage } from "@/store";
 
 </script>
 
