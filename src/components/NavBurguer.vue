@@ -17,3 +17,15 @@ const showModal = ref(false)
     </modal>
   </Teleport>
 </template>
+
+<style>
+#show-modal {
+    border: none;
+    background: none;
+    display: flex;
+    justify-content: right;
+    position: fixed;
+    top: 25px;
+    right: 25px;
+}
+</style>
