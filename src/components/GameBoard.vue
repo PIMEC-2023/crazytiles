@@ -2,11 +2,17 @@
 <script setup>
 
 import { ref } from "vue";
+import { playAudioFile } from "../utils";
 
 import errorAudio from "@/assets/audio/error.mp3";
 import flipCardAudio from "@/assets/audio/flipcard.mp3";
 import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
+
+// props
+const props = defineProps({
+    audio: Boolean
+})
 
 // Dimensiones del tablero
 const dimensionsX = ref(2);
@@ -47,9 +53,6 @@ const isFinished = ref(false)
 
 // Variable que designa si hemos acertado o no la pareja
 const success = ref(false)
-
-// Audio on/off
-const audioOn = ref(true);
 
 // Variable que designa si debemos girar una carta o no
 // const isFlipped = ref(false)
@@ -123,11 +126,9 @@ const disappearCard = (card) => {
     };
 };
 
-function playAudio(audioFile, soundVolume) {
-    if (!audioOn.value) { return }
-    var audio = new Audio(audioFile)
-    audio.volume = soundVolume
-    audio.play();
+function playAudio(audioFile, volume) {
+    if (!props.audio) { return }
+    playAudioFile(audioFile, volume)
 }
 
 </script>
