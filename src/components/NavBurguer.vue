@@ -18,7 +18,7 @@ const showModal = ref(false)
   </Teleport>
 </template>
 
-<style>
+<style scoped>
 #show-modal {
     border: none;
     background: none;

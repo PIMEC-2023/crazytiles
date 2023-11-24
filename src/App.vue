@@ -20,4 +20,5 @@ import NavBurguer from "./components/NavBurguer.vue";
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
