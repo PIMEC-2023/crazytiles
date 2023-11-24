@@ -7,7 +7,7 @@ const pages = {
     GamePage
 }
 
-import { markRaw } from 'vue'
+import { reactive } from 'vue'
 
 /**
  * 
@@ -23,7 +23,7 @@ export const setGameConfig = (difficulty, gameType, sound) => {
   store.gameConfig = {difficulty, gameType, sound}
 }
 
-export const store = markRaw({
+export const store = reactive({
   currentPage: pages["StartPage"],
   gameConfig: {
     difficulty: 'easy', // 'easy' | 'medium' | 'hard'

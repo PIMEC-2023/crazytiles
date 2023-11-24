@@ -1,6 +1,6 @@
 <script setup>
 import GameBoard from "@/components/GameBoard.vue"
-import { changePage } from "@/store";
+import { changePage, store } from "@/store";
 
 </script>
 
