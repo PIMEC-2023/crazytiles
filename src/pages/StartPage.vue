@@ -5,7 +5,6 @@ import { setGameConfig, changePage } from "@/store";
 
 <template>
     <main>
-        <div id="menu"><img src="../assets/imgs/icon-menu.svg" alt="burger-icon" class="burger-icon"></div>
 
         <div id="optionAccess">
             <img src="../assets/imgs/logo-isotype.svg" alt="" class="logo-iso">
