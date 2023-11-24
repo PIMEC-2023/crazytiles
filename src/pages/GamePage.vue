@@ -6,7 +6,7 @@ import { changePage, store } from "@/store";
 
 <template>
     <div>
-        <GameBoard />
+        <GameBoard :audio="true" />
     </div>
 </template>
 
