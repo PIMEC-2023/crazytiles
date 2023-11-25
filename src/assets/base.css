@@ -56,17 +56,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  width: 80vw;
-  justify-content: center;
-  
-  background-color: white;
-  margin: 0 auto;
-  padding:20px;
-}
 
 .regular {
   font-weight: 400;
