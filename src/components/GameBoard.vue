@@ -8,6 +8,8 @@ import errorAudio from "@/assets/audio/error.mp3";
 import flipCardAudio from "@/assets/audio/flipcard.mp3";
 import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
+import { changePage } from "../store";
+import VictoryPage from "../pages/VictoryPage.vue";
 
 // props
 const props = defineProps({
@@ -109,7 +111,8 @@ const checkCards = (card, index) => {
                 isFinished.value = true;
                 isPlaying.value = false;
                 matches.value = [];
-                return
+                changePage('VictoryPage')
+                return;
             }
             success.value ? playAudio(successAudio, 0.4) : playAudio(errorAudio, 0.1);
             firstSelectedCard.value = null;
