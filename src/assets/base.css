@@ -1,0 +1,105 @@
+@import "fonts.css";
+
+:root {
+  --white: #ffffff;
+  --black:#161920;
+
+  --initial-and-game-bg: #FEF5CC;
+  --config-bg: #02C4AC;
+  
+  /*Guardar config, nou joc*/
+  --action-button-bg:#1747E7;
+  --action-buttton-bg-hover:#1239b9;
+  
+  /*Restart button*/
+  --restart-button-type-color:#1747E7;
+  --restart-button-bg:rgba(209,213,219,0.5);
+  --restart-button-bg-hover:rgba(209,213,219,1);
+
+  /*Stats*/
+  --game-stats-bg:#FDBE11;
+  --time-type-color:#1747E7;
+  --time-box-border:#FDBE11;
+
+  /*Good Ending*/
+  --ge-bg:#d1dafa;
+  --ge-h1:#F75A2D; 
+
+  /*Bad Ending*/
+  --be-bg:#fa9c81;
+  --be-h1:#1747E7;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: #f1f1f1;
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 80vw;
+  justify-content: center;
+  
+  background-color: white;
+  margin: 0 auto;
+  padding:20px;
+}
+
+.regular {
+  font-weight: 400;
+}
+
+.semi {
+  font-weight: 600;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.palette {
+  display: flex;
+  gap:20px;
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border:1px solid black;
+  height: 100px;
+  width: 100px;
+  color:white;
+}
+
+.blue {
+  background-color: var(--action-button-bg);
+}
+
+.green {
+  background-color: var(--config-bg)
+}
