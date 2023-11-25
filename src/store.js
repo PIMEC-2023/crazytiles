@@ -25,6 +25,10 @@ export const setGameConfig = (difficulty, gameType, sound) => {
 
 export const store = reactive({
   currentPage: pages["StartPage"],
+  finalScore: {
+    elapsedTime: undefined,
+    attempts: undefined
+  },
   gameConfig: {
     difficulty: 'easy', // 'easy' | 'medium' | 'hard'
     gameType: 'numbers', // 'numbers' | 'images' | 'custom-images'

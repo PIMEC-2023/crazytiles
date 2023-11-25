@@ -1,5 +1,4 @@
 <script setup>
-
 // import DesignGuides from './components/DesignGuides.vue';
 import { setGameConfig, changePage, getCurrentPage } from "@/store";
 import NavBurguer from "./components/NavBurguer.vue";
