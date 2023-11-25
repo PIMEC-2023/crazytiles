@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import timerIcon from "@/assets/imgs/icon-clock.svg";
-import { formatTime } from "../assets/utils";
+import { formatTime } from "@/utils";
 
 const props = defineProps(["start"]);
 
@@ -30,8 +30,8 @@ const seconds = computed(() => {
 });
 
 defineExpose({
-    totalSeconds
-})
+  totalSeconds,
+});
 </script>
 
 <template>
@@ -50,7 +50,7 @@ defineExpose({
 }
 .timer {
   background-color: var(--white);
-  color:var(--time-type-color);
+  color: var(--time-type-color);
   border-radius: 6px;
   border: 3px solid rgba(209, 213, 219, 0.5);
   padding: 4px 12px 4px 12px;
