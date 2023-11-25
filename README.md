@@ -96,12 +96,14 @@ Este es el [prototipo](Enlace final aquí).
 Proyecto desarrollado por el equipo Macedonia.
 
 - Albertina - [@Albertina75](https://github.com/Albertina75)
+- Berta - [@bertablancpastor](https://github.com/bertablancpastor/)
 - Diego - [@DMucci](https://github.com/DMucci)
 - Ester - [@Ester-0](https://github.com/Ester-0)
 - Galis - [@GalisGalisteo](https://github.com/GalisGalisteo)
 - Gerard - [@gegebe](https://github.com/gegebe)
 - Kate - [@KateOs99](https://github.com/KateOs99)
 - Maria - [@mariaarandam](https://github.com/mariaarandam)
+- Oriol -[@OriolB-Uri](https://github.com/OriolB-Uri/) 
 - Oscar - [@omiras](https://github.com/omiras)
 
 ## Contribuciones
