@@ -1,6 +1,8 @@
 <script setup>
 import GameBoard from "@/components/GameBoard.vue";
+import UploadWidget from "@/components/UploadWidget.vue";
 import { changePage, store } from "@/store";
+import { ref } from "vue";
 
 // TODO importar el resto de frutas
 // TODO Poner esto en configuración
@@ -14,7 +16,6 @@ import cherries from "@/assets/imgs/frutas/cireres.svg";
 import lemon from "@/assets/imgs/frutas/llimona.svg";
 import grapes from "@/assets/imgs/frutas/raim.svg";
 import kiwi from "@/assets/imgs/frutas/kiwi.svg";
-import { ref } from "vue";
 
 const fruitsArray = [
   strawberry,
@@ -29,23 +30,14 @@ const fruitsArray = [
   kiwi,
 ];
 
-const uploadedPhotos = ref([]);
+const photosUrls = ref([]);
 
-const widget = window.cloudinary.createUploadWidget(
-  {
-    cloud_name: import.meta.env.VITE_APP_CLOUD_NAME,
-    upload_preset: import.meta.env.VITE_APP_UPLOAD_PRESET,
-    cropping: true,
-    showSkipCropButton: false,
-    croppingAspectRatio: 1,
-  },
-  (error, result) => {
-    if (!error && result && result.event === "success") {
-      console.log("Done uploading...", result.info);
-      uploadedPhotos.value.push(result.info.secure_url);
-    }
-  }
-);
+const handleUploadedPhotos = (uploadedPhotos) => {
+  // console.log("handleUploadedPhotos: ", uploadedPhotos);
+  photosUrls.value = uploadedPhotos.map((u) =>
+    u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
+  );
+};
 
 const handleEndGame = (totalTime, attempts) => {
   console.log(totalTime, attempts);
@@ -66,7 +58,13 @@ const handleEndGame = (totalTime, attempts) => {
       @game-ended="handleEndGame"
     />
     <!-- <GameBoard :audio="true" difficulty="easy" @game-ended="handleEndGame" /> -->
-    <!-- <GameBoard :audio="true" difficulty="easy" :urls-array="uploadedPhotos" @game-ended="handleEndGame" /> -->
+    <!-- <GameBoard
+      :audio="true"
+      difficulty="easy"
+      :urls-array="photosUls"
+      @game-ended="handleEndGame"
+    /> -->
+    <UploadWidget @photos="handleUploadedPhotos" />
   </div>
 </template>
 
