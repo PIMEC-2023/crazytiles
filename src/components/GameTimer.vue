@@ -3,14 +3,10 @@ import { ref, computed } from "vue";
 import timerIcon from "@/assets/imgs/icon-clock.svg";
 import { formatTime } from "@/utils";
 
-const props = defineProps(["start"]);
-
 const totalSeconds = ref(0);
 
 const setTime = () => {
-  if (props.start) {
     ++totalSeconds.value;
-  }
 };
 
 setInterval(setTime, 1000);

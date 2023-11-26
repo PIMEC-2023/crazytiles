@@ -28,20 +28,17 @@ const difficultyLevels = {
   },
   medium: {
     x: 4,
-    y: 5,
+    y: 6,
   },
   hard: {
     x: 4,
-    y: 7,
+    y: 8,
   },
 };
 
 const dimensionsX = ref(null);
 const dimensionsY = ref(null);
-
 const cards = ref([]);
-const isPlaying = ref(false);
-const isFinished = ref(false);
 const firstSelectedCard = ref(null);
 const secondSelectedCard = ref(null);
 const matches = ref([]);
@@ -50,8 +47,6 @@ const counter = ref(0);
 
 const newGame = () => {
   console.log("Game starts");
-  isPlaying.value = true;
-  isFinished.value = false;
   cards.value = board(dimensionsX.value, dimensionsY.value, props.urlsArray);
   matches.value = [];
   attempts.value = 0;
@@ -88,11 +83,7 @@ const checkCards = (card, index) => {
     setTimeout(() => {
       if (matches.value.length * 2 === cards.value.length) {
         playAudio(victoryAudio, 0.3);
-        isFinished.value = true;
-        isPlaying.value = false;
-
         let totalTime = handleCounter();
-
         emit("gameEnded", totalTime, attempts.value);
         return;
       }
@@ -139,7 +130,7 @@ onMounted(() => {
   <h1>Crazy Tiles</h1>
   <main>
     <div class="main-page-game">
-      <GameTimer ref="counter" :start="isPlaying" />
+      <GameTimer ref="counter" />
       <section
         class="game"
         :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
