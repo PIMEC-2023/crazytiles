@@ -1,28 +1,30 @@
 <script setup>
-import { onMounted, ref, defineEmits } from "vue";
+import { onMounted, ref } from "vue";
+import { useSound } from '@vueuse/sound'
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
 
-import { board } from "@/assets/utils.js";
-import { formatTime } from "../assets/utils";
-import { playAudioFile } from "../utils";
+import { board } from "@/utils.js";
+import { formatTime } from "@/utils.js";
 
 import errorAudio from "@/assets/audio/error.mp3";
 import flipCardAudio from "@/assets/audio/flipcard.mp3";
 import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
 
-// props
-
 const props = defineProps({
   audio: Boolean,
   difficulty: String,
-  urlsArray: Array
+  urlsArray: Array,
 });
 
-const emit = defineEmits(['gameEnded'])
+const emit = defineEmits(["gameEnded"]);
 
+const errorAudioSound = useSound(errorAudio, {volume: 0.1, soundEnabled: props.audio})
+const flipCardAudioSound = useSound(flipCardAudio, {volume: 0.1, soundEnabled: props.audio})
+const successAudioSound = useSound(successAudio, {volume: 0.4, soundEnabled: props.audio})
+const victoryAudioSound = useSound(victoryAudio, {volume: 0.3, soundEnabled: props.audio})
 
 const difficultyLevels = {
   easy: {
@@ -31,110 +33,88 @@ const difficultyLevels = {
   },
   medium: {
     x: 4,
-    y: 5,
+    y: 6,
   },
   hard: {
     x: 4,
-    y: 7,
+    y: 8,
   },
 };
 
-const dimensionsX = ref(difficultyLevels[props.difficulty].x);
-const dimensionsY = ref(difficultyLevels[props.difficulty].y);
-
+const dimensionsX = ref(null);
+const dimensionsY = ref(null);
 const cards = ref([]);
-
-const isPlaying = ref(false);
-
-const isFinished = ref(false);
-
-// Variable que designa si hemos acertado o no la pareja
-const success = ref(false)
-
-// Variable que designa si debemos girar una carta o no
-// const isFlipped = ref(false)
-
-// Referencia a la primera carta volteada
-const firstSelectedCard = ref(null);
-
-const secondSelectedCard = ref(null);
-
+const firstSelectedCardIndex = ref(null);
+const secondSelectedCardIndex = ref(null);
 const matches = ref([]);
+const attempts = ref(0);
+const counter = ref(0);
 
 const newGame = () => {
   console.log("Game starts");
-  isPlaying.value = true;
-  isFinished.value = false;
-  cards.value = board(dimensionsX.value, dimensionsY.value,
-    props.urlsArray);
+  cards.value = board(dimensionsX.value, dimensionsY.value, props.urlsArray);
   matches.value = [];
   attempts.value = 0;
 };
 
-let firstClick = false;
-let isTimeoutActive = false;
+const selectedCards = ref({
+  clickedCards: [],
+  addCard(card) {
+    this.clickedCards.push(card);
+  },
+  reset() {
+    this.clickedCards = [];
+  },
+  isMatch() {
+    return this.clickedCards[0] === this.clickedCards[1];
+  },
+});
 
+let isTimeoutActive = false;
 const checkCards = (card, index) => {
   if (isTimeoutActive) {
     return;
   }
-
-  // TODO: Este tipo de comparaciones cambiarlo por !firstClick
-  if (firstClick === false) {
-    firstSelectedCard.value = index;
-    firstClick = true;
-  } else if (firstClick === true && firstSelectedCard.value === index) {
-    return; // TODO: Los returns tempranos que sean la primera opción de la rama condicional
-  } else {
-    secondSelectedCard.value = index;
-    firstClick = false;
+  if (
+    selectedCards.value.clickedCards.length === 1 &&
+    firstSelectedCardIndex.value === index
+  ) {
+    return;
+  } else if (selectedCards.value.clickedCards.length === 0) {
+    firstSelectedCardIndex.value = index;
+    selectedCards.value.addCard(card);
+  } else if (selectedCards.value.clickedCards.length === 1) {
+    secondSelectedCardIndex.value = index;
     attempts.value++;
+    selectedCards.value.addCard(card);
   }
 
-  playAudio(flipCardAudio, 0.1);
+  flipCardAudioSound.play()
 
+//   playAudio(flipCardAudio, 0.1);
 
-  // if (firstSelectedCard.value !== null && secondSelectedCard.value !== null) {
-  //   if (
-  //     cards.value[firstSelectedCard.value] ===
-  //     cards.value[secondSelectedCard.value]
-  //   ) {
-  //     matches.value.push(card);
-  //   }
-
-
-
-  if (secondSelectedCard.value !== null) {
-    if (cards.value[firstSelectedCard.value] === cards.value[secondSelectedCard.value]) {
-      success.value = true //TODO: creo que mirando si 'card' está en matches, podemos reporoducir más tarde el audio de acierto
+  if (selectedCards.value.clickedCards.length === 2) {
+    if (selectedCards.value.isMatch()) {
       matches.value.push(card);
-    } else {
-      success.value = false;
     }
     isTimeoutActive = true;
-
     setTimeout(() => {
-      // comprobación end game
       if (matches.value.length * 2 === cards.value.length) {
-        playAudio(victoryAudio, 0.3);
-        isFinished.value = true;
-        isPlaying.value = false;
-        // TODO hay que enviar este tiempo total de alguna forma a EndingPage.vue
-        //   Opción 1: en store.js, crear una variable de estado global
-        //   Opción 2: exponerla con defineExpose , como el GameTimer.vue
-        // Opción 3: emitir un evento para indicar a GamePage que he acabado con el totalTime y numero de intentos
+        victoryAudioSound.play();
         let totalTime = handleCounter();
-        emit('gameEnded', totalTime, attempts.value)
-        return
+        emit("gameEnded", totalTime, attempts.value);
+        return;
       }
-      success.value ? playAudio(successAudio, 0.4) : playAudio(errorAudio, 0.1);
-      firstSelectedCard.value = null;
-      secondSelectedCard.value = null;
+      matches.value.includes(card)
+        ? successAudioSound.play()
+        : errorAudioSound.play();
+      firstSelectedCardIndex.value = null;
+      secondSelectedCardIndex.value = null;
       isTimeoutActive = false;
     }, 1000);
+    selectedCards.value.reset();
   }
-}
-  ;
+};
 
 const disappearCard = (card) => {
   return {
@@ -143,10 +123,6 @@ const disappearCard = (card) => {
   };
 };
 
-const attempts = ref(0);
-
-const counter = ref(0);
-
 const handleCounter = () => {
   const totalSeconds = counter.value.totalSeconds;
   const min = Math.floor(totalSeconds / 60);
@@ -154,28 +130,34 @@ const handleCounter = () => {
   return `${formatTime(min)}:${formatTime(sec)}`;
 };
 
-function playAudio(audioFile, volume) {
-  if (!props.audio) { return }
-  playAudioFile(audioFile, volume)
-}
-
 onMounted(() => {
-  newGame()
-})
-
+  const { x, y } = difficultyLevels[props.difficulty];
+  dimensionsX.value = x;
+  dimensionsY.value = y;
+  newGame();
+});
 </script>
 
 <template>
   <h1>Crazy Tiles</h1>
   <main>
     <div class="main-page-game">
-      <GameTimer ref="counter" :start="isPlaying" />
-      <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
+      <GameTimer ref="counter" />
+      <section
+        class="game"
+        :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
+      >
         <article v-for="(card, index) in cards" :key="index">
           <div>
-            <CardTile :is-revealed="
-              firstSelectedCard === index || secondSelectedCard === index
-            " :disabled="matches.includes(card)" :style="disappearCard(card)" @click="checkCards(card, index)">
+            <CardTile
+              :is-revealed="
+                firstSelectedCardIndex === index ||
+                secondSelectedCardIndex === index
+              "
+              :disabled="matches.includes(card)"
+              :style="disappearCard(card)"
+              @click="checkCards(card, index)"
+            >
               <span v-if="!urlsArray">{{ card }}</span>
               <img v-else :src="card" />
               <!-- :alt="card.substr(24)" -->
