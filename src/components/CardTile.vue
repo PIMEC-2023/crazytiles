@@ -1,10 +1,10 @@
 <script setup>
-defineProps(["isRevealed"]);
+defineProps(["isRevealed", 'isDisabled']);
 </script>
 
 <template>
   <div>
-    <button class="tile" :class="{ revealed: isRevealed }">
+    <button :disabled="isDisabled" class="tile" :class="{ revealed: isRevealed }">
       <span v-show="isRevealed" class="card">
         <slot />
       </span>
