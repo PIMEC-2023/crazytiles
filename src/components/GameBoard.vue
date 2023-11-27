@@ -1,12 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import { useSound } from '@vueuse/sound'
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
 
 import { board } from "@/utils.js";
 import { formatTime } from "@/utils.js";
-import { playAudioFile } from "@/utils.js";
 
 import errorAudio from "@/assets/audio/error.mp3";
 import flipCardAudio from "@/assets/audio/flipcard.mp3";
@@ -20,6 +20,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["gameEnded"]);
+
+const errorAudioSound = useSound(errorAudio, {volume: 0.1, soundEnabled: props.audio})
+const flipCardAudioSound = useSound(flipCardAudio, {volume: 0.1, soundEnabled: props.audio})
+const successAudioSound = useSound(successAudio, {volume: 0.4, soundEnabled: props.audio})
+const victoryAudioSound = useSound(victoryAudio, {volume: 0.3, soundEnabled: props.audio})
 
 const difficultyLevels = {
   easy: {
@@ -66,7 +71,6 @@ const selectedCards = ref({
 });
 
 let isTimeoutActive = false;
-
 const checkCards = (card, index) => {
   if (isTimeoutActive) {
     return;
@@ -85,7 +89,9 @@ const checkCards = (card, index) => {
     selectedCards.value.addCard(card);
   }
 
-  playAudio(flipCardAudio, 0.1);
+  flipCardAudioSound.play()
+
+//   playAudio(flipCardAudio, 0.1);
 
   if (selectedCards.value.clickedCards.length === 2) {
     if (selectedCards.value.isMatch()) {
@@ -94,14 +100,14 @@ const checkCards = (card, index) => {
     isTimeoutActive = true;
     setTimeout(() => {
       if (matches.value.length * 2 === cards.value.length) {
-        playAudio(victoryAudio, 0.3);
+        victoryAudioSound.play();
         let totalTime = handleCounter();
         emit("gameEnded", totalTime, attempts.value);
         return;
       }
       matches.value.includes(card)
-        ? playAudio(successAudio, 0.4)
-        : playAudio(errorAudio, 0.1);
+        ? successAudioSound.play()
+        : errorAudioSound.play();
       firstSelectedCardIndex.value = null;
       secondSelectedCardIndex.value = null;
       isTimeoutActive = false;
@@ -122,13 +128,6 @@ const handleCounter = () => {
   const min = Math.floor(totalSeconds / 60);
   const sec = totalSeconds % 60;
   return `${formatTime(min)}:${formatTime(sec)}`;
-};
-
-const playAudio = (audioFile, volume) => {
-  if (!props.audio) {
-    return;
-  }
-  playAudioFile(audioFile, volume);
 };
 
 onMounted(() => {

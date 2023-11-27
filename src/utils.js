@@ -1,9 +1,3 @@
-export const playAudioFile = (audioFile, soundVolume) => {
-    var audio = new Audio(audioFile)
-    audio.volume = soundVolume
-    audio.play();
-}
-
 export const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
