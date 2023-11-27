@@ -121,13 +121,4 @@ main {
     cursor: pointer;
 }
 
-#button__config {
-    color: var(--white);
-    font-family: 'Inter';
-    font-size: 24px;
-}
-
-#button__config:hover {
-    cursor: pointer;
-}
 </style>

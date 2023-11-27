@@ -16,4 +16,14 @@ const showModal = ref(false)
 </template>
 
 <style scoped>
+
+#button__config {
+    color: var(--white);
+    font-family: 'Inter';
+    font-size: 24px;
+}
+
+#button__config:hover {
+    cursor: pointer;
+}
 </style>
