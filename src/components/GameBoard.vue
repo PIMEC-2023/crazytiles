@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, defineEmits } from "vue";
+import { onMounted, ref } from "vue";
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
