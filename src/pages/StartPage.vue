@@ -1,5 +1,6 @@
 <script setup>
 import { setGameConfig, changePage, store } from "@/store";
+import NavConfig from "@/components/NavConfig.vue";
 
 // esto se pondrá en configuración y se pasará como props:
 import strawberry from "@/assets/imgs/frutas/maduixa.svg";
@@ -57,7 +58,9 @@ const widget = window.cloudinary.createUploadWidget(
         <div id="optionAccess">
             <img src="../assets/imgs/logo-isotype.svg" alt="" class="logo-iso">
             <button @click="changePage('GamePage')" id="button__start">Iniciar el joc</button>
-            <div id="button__config">Configuració</div>
+            <!-- <div id="button__config">Configuració</div> -->
+            <NavConfig />
+
         </div>
     </main>
 </template>
