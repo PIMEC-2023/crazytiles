@@ -154,7 +154,7 @@ onMounted(() => {
                 firstSelectedCardIndex === index ||
                 secondSelectedCardIndex === index
               "
-              :disabled="matches.includes(card)"
+              :is-disabled="matches.includes(card)"
               :style="disappearCard(card)"
               @click="checkCards(card, index)"
             >
