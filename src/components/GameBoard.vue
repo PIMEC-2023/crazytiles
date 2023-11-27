@@ -3,6 +3,8 @@ import { onMounted, ref, defineEmits } from "vue";
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
+import FullScreen from "./FullScreen.vue";
+
 
 import { board } from "@/assets/utils.js";
 import { formatTime } from "../assets/utils";
@@ -169,7 +171,13 @@ onMounted(() => {
   <h1>Crazy Tiles</h1>
   <main>
     <div class="main-page-game">
-      <GameTimer ref="counter" :start="isPlaying" />
+      <div style="display: flex;">
+
+        <GameTimer ref="counter" :start="isPlaying" />
+        <FullScreen>
+
+        </FullScreen>
+      </div>
       <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
         <article v-for="(card, index) in cards" :key="index">
           <div>
