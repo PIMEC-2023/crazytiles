@@ -39,8 +39,8 @@ const difficultyLevels = {
 const dimensionsX = ref(null);
 const dimensionsY = ref(null);
 const cards = ref([]);
-const firstSelectedCard = ref(null);
-const secondSelectedCard = ref(null);
+const firstSelectedCardIndex = ref(null);
+const secondSelectedCardIndex = ref(null);
 const matches = ref([]);
 const attempts = ref(0);
 const counter = ref(0);
@@ -52,31 +52,43 @@ const newGame = () => {
   attempts.value = 0;
 };
 
-let firstClick = false;
+const selectedCards = ref({
+  clickedCards: [],
+  addCard(card) {
+    this.clickedCards.push(card);
+  },
+  reset() {
+    this.clickedCards = [];
+  },
+  isMatch() {
+    return this.clickedCards[0] === this.clickedCards[1];
+  },
+});
+
 let isTimeoutActive = false;
 
 const checkCards = (card, index) => {
   if (isTimeoutActive) {
     return;
   }
-  if (firstClick === true && firstSelectedCard.value === index) {
+  if (
+    selectedCards.value.clickedCards.length === 1 &&
+    firstSelectedCardIndex.value === index
+  ) {
     return;
-  } else if (!firstClick) {
-    firstSelectedCard.value = index;
-    firstClick = true;
-  } else {
-    secondSelectedCard.value = index;
-    firstClick = false;
+  } else if (selectedCards.value.clickedCards.length === 0) {
+    firstSelectedCardIndex.value = index;
+    selectedCards.value.addCard(card);
+  } else if (selectedCards.value.clickedCards.length === 1) {
+    secondSelectedCardIndex.value = index;
     attempts.value++;
+    selectedCards.value.addCard(card);
   }
 
   playAudio(flipCardAudio, 0.1);
 
-  if (secondSelectedCard.value !== null) {
-    if (
-      cards.value[firstSelectedCard.value] ===
-      cards.value[secondSelectedCard.value]
-    ) {
+  if (selectedCards.value.clickedCards.length === 2) {
+    if (selectedCards.value.isMatch()) {
       matches.value.push(card);
     }
     isTimeoutActive = true;
@@ -90,10 +102,11 @@ const checkCards = (card, index) => {
       matches.value.includes(card)
         ? playAudio(successAudio, 0.4)
         : playAudio(errorAudio, 0.1);
-      firstSelectedCard.value = null;
-      secondSelectedCard.value = null;
+      firstSelectedCardIndex.value = null;
+      secondSelectedCardIndex.value = null;
       isTimeoutActive = false;
     }, 1000);
+    selectedCards.value.reset();
   }
 };
 
@@ -139,7 +152,8 @@ onMounted(() => {
           <div>
             <CardTile
               :is-revealed="
-                firstSelectedCard === index || secondSelectedCard === index
+                firstSelectedCardIndex === index ||
+                secondSelectedCardIndex === index
               "
               :disabled="matches.includes(card)"
               :style="disappearCard(card)"
