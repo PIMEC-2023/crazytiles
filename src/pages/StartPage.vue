@@ -1,21 +1,15 @@
 <script setup>
-import { setGameConfig, changePage, store } from "@/store";
-import ConfigTest from "../components/ConfigTest.vue";
-
+import { changePage } from "@/store";
+import NavConfig from "@/components/NavConfig.vue";
 </script>
 
 <template>
   <main>
     <div id="optionAccess">
-      <img src="../assets/imgs/logo-isotype.svg" alt="" class="logo-iso" />
-      <button @click="changePage('GamePage')" id="button__start">
-        Iniciar el joc
-      </button>
-      <div id="button__config">Configuració</div>
-    </div>
-    <div>
-      <setGameConfig />
-      <ConfigTest />
+      <img src="../assets/imgs/logo-isotype.svg" alt="" class="logo-iso">
+      <button @click="changePage('GamePage')" id="button__start">Iniciar el joc</button>
+      <!-- <div id="button__config">Configuració</div> -->
+      <NavConfig />
     </div>
   </main>
 </template>
@@ -72,16 +66,6 @@ main {
 #button__start:hover {
   transform: scale(1.05);
   transition-duration: 500ms;
-  cursor: pointer;
-}
-
-#button__config {
-  color: var(--white);
-  font-family: "Inter";
-  font-size: 24px;
-}
-
-#button__config:hover {
   cursor: pointer;
 }
 </style>

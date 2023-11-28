@@ -1,9 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useSound } from "@vueuse/sound";
+import { useFullscreen } from '@vueuse/core';
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
+
+
 
 import { board } from "@/utils.js";
 import { formatTime } from "@/utils.js";
@@ -21,22 +24,10 @@ const props = defineProps({
 
 const emit = defineEmits(["gameEnded"]);
 
-const errorAudioSound = useSound(errorAudio, {
-  volume: 0.1,
-  soundEnabled: props.audio,
-});
-const flipCardAudioSound = useSound(flipCardAudio, {
-  volume: 0.1,
-  soundEnabled: props.audio,
-});
-const successAudioSound = useSound(successAudio, {
-  volume: 0.4,
-  soundEnabled: props.audio,
-});
-const victoryAudioSound = useSound(victoryAudio, {
-  volume: 0.3,
-  soundEnabled: props.audio,
-});
+const errorAudioSound = useSound(errorAudio, { volume: 0.1, soundEnabled: props.audio })
+const flipCardAudioSound = useSound(flipCardAudio, { volume: 0.1, soundEnabled: props.audio })
+const successAudioSound = useSound(successAudio, { volume: 0.4, soundEnabled: props.audio })
+const victoryAudioSound = useSound(victoryAudio, { volume: 0.3, soundEnabled: props.audio })
 
 const difficultyLevels = {
   easy: {
@@ -56,6 +47,8 @@ const difficultyLevels = {
 const dimensionsX = ref(null);
 const dimensionsY = ref(null);
 const cards = ref([]);
+const { toggle: toggleFullScreen, exit: exitFullScreen } = useFullscreen();
+
 const firstSelectedCardIndex = ref(null);
 const secondSelectedCardIndex = ref(null);
 const matches = ref([]);
@@ -115,8 +108,9 @@ const checkCards = (card, index) => {
       if (matches.value.length * 2 === cards.value.length) {
         victoryAudioSound.play();
         let totalTime = handleCounter();
-        emit("gameEnded", totalTime, attempts.value);
-        return;
+        emit('gameEnded', totalTime, attempts.value)
+        exitFullScreen();
+        return
       }
       matches.value.includes(card)
         ? successAudioSound.play()
@@ -152,25 +146,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Crazy Tiles</h1>
   <main>
     <div class="main-page-game">
-      <GameTimer ref="counter" />
-      <section
-        class="game"
-        :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
-      >
+      <div style="display: flex;">
+        <GameTimer ref="counter" />
+        <button @click="toggleFullScreen" style="padding-top: auto; padding-left: 10px;"><img
+            src="src\assets\imgs\icon-full_screen.svg" alt=""></button>
+      </div>
+
+      <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
         <article v-for="(card, index) in cards" :key="index">
           <div>
-            <CardTile
-              :is-revealed="
-                firstSelectedCardIndex === index ||
-                secondSelectedCardIndex === index
-              "
-              :is-disabled="matches.includes(card)"
-              :style="disappearCard(card)"
-              @click="checkCards(card, index)"
-            >
+            <CardTile :is-revealed="
+              firstSelectedCardIndex === index ||
+              secondSelectedCardIndex === index
+            " :is-disabled="matches.includes(card)" :style="disappearCard(card)" @click="checkCards(card, index)">
               <span v-if="!urlsArray">{{ card }}</span>
               <img v-else :src="card" />
               <!-- :alt="card.substr(24)" -->
@@ -179,8 +169,8 @@ onMounted(() => {
         </article>
       </section>
       <div class="score">
-        <GameScore :score="attempts" text="Intentos"></GameScore>
-        <GameScore :score="matches.length" text="Aciertos"></GameScore>
+        <GameScore :score="attempts" text="Intents"></GameScore>
+        <GameScore :score="matches.length" text="Encerts"></GameScore>
       </div>
     </div>
   </main>
