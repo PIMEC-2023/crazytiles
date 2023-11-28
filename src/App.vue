@@ -2,6 +2,7 @@
 // import DesignGuides from './components/DesignGuides.vue';
 import { setGameConfig, changePage, getCurrentPage } from "@/store";
 import NavBurguer from "./components/NavBurguer.vue";
+import Logo from "@/assets/imgs/logo-isotype.svg"
 
 // Para cambiar a otra página
 //changePage("GamePage")
@@ -19,5 +20,4 @@ import NavBurguer from "./components/NavBurguer.vue";
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -13,19 +13,19 @@ const showModal = ref(false)
     <modal :show="showModal" @close="showModal = false">
       <!-- <template #header>
         
-      </template> -->
+        </template> -->
     </modal>
   </Teleport>
 </template>
 
 <style scoped>
 #show-modal {
-    border: none;
-    background: none;
-    display: flex;
-    justify-content: right;
-    position: fixed;
-    top: 25px;
-    right: 25px;
+  border: none;
+  background: none;
+  display: flex;
+  justify-content: right;
+  position: fixed;
+  top: 25px;
+  right: 25px;
 }
 </style>
