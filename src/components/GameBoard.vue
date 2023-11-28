@@ -1,9 +1,13 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useSound } from '@vueuse/sound'
+import { useFullscreen } from '@vueuse/core';
+
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
+
+
 
 import { board } from "@/utils.js";
 import { formatTime } from "@/utils.js";
@@ -44,6 +48,8 @@ const difficultyLevels = {
 const dimensionsX = ref(null);
 const dimensionsY = ref(null);
 const cards = ref([]);
+const { toggle: toggleFullScreen, exit: exitFullScreen } = useFullscreen();
+
 const firstSelectedCardIndex = ref(null);
 const secondSelectedCardIndex = ref(null);
 const matches = ref([]);
@@ -102,8 +108,9 @@ const checkCards = (card, index) => {
       if (matches.value.length * 2 === cards.value.length) {
         victoryAudioSound.play();
         let totalTime = handleCounter();
-        emit("gameEnded", totalTime, attempts.value);
-        return;
+        emit('gameEnded', totalTime, attempts.value)
+        exitFullScreen();
+        return
       }
       matches.value.includes(card)
         ? successAudioSound.play()
@@ -141,7 +148,12 @@ onMounted(() => {
 <template>
   <main>
     <div class="main-page-game">
-      <GameTimer ref="counter" />
+      <div style="display: flex;">
+        <GameTimer ref="counter" />
+        <button @click="toggleFullScreen" style="padding-top: auto; padding-left: 10px;"><img
+            src="src\assets\imgs\icon-full_screen.svg" alt=""></button>
+      </div>
+
       <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
         <article v-for="(card, index) in cards" :key="index">
           <div>
