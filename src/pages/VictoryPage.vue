@@ -6,8 +6,9 @@ import ConfettiExplosion from "vue-confetti-explosion";
 <template>
     <div class="victory">
         <section>
-            <div>
-                <ConfettiExplosion :particleCount="300" :force="0.7" :particleSize="20" :duration="4000" />
+            <div style="position: fixed; top:100px">
+                <ConfettiExplosion  :particleCount="200" :force="0.5" :particleSize="12" :duration="4000"
+                    :stageHeight="900" :stageWidth="1200" />
             </div>
             <img src="@/assets/imgs/logo-isotype.svg" alt="logo">
             <h1>FELICITATS!</h1>
@@ -96,6 +97,5 @@ button:hover {
 .new__game:hover {
     background-color: var(--action-buttton-bg-hover);
     color: white;
-}
 
-</style>
+}</style>
