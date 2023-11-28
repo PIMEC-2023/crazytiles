@@ -5,9 +5,9 @@ const props = defineProps({
   show: Boolean
 });
 
-const difficultySelected = ref("mitjana");
-const soundSelected = ref("on");
-const themeSelected = ref("fruites");
+const difficultySelected = ref("");
+const soundSelected = ref("");
+const themeSelected = ref("");
 
 
 
@@ -28,11 +28,8 @@ const themeSelected = ref("fruites");
           <form class="container">
             <!-- dficultat -->
             <div>
-              <slot name="dificultat">
-
-                <fieldset class="dificultat">
-                <legend class="headers">Dificultat</legend>
-                <!-- <h2 class="headers">Dificultat</h2> -->
+              <slot name="footer">
+                <h2 class="headers">Dificultat</h2>
                 <ul>
                   <li>
                     <input id="facil" type="radio" value="facil" v-model="difficultySelected" name="dificultat">
@@ -47,16 +44,12 @@ const themeSelected = ref("fruites");
                     <label for="dificil">Difícil</label>
                   </li>
                 </ul>
-              </fieldset>
-
               </slot>
             </div>
             <!-- so -->
-            <div class="so">
-              <slot name="so">
-                <fieldset class="so">
-                <legend class="headers">So</legend>
-                <!-- <h2 class="headers">So</h2> -->
+            <div class="modal-credits">
+              <slot name="Crèdits">
+                <h2 class="headers">So</h2>
                 <ul>
                   <li>
                     <input id="on" type="radio" value="on" v-model="soundSelected" name="so">
@@ -67,53 +60,29 @@ const themeSelected = ref("fruites");
                     <label for="off">Off</label>
                   </li>
                   <li>
-                    <span>El so està: {{ soundSelected }}</span>
+                    <span>El so està {{ soundSelected }}</span>
                   </li>
                 </ul>
-              </fieldset>
               </slot>
             </div>
-
             <!-- tematica -->
             <div>
-              <fieldset class="tema">
-              <legend class="headers">Temàtica</legend>
-              <!-- <h2 class="headers">Temàtica</h2> -->
-                <ul>
-                  <li>
-                    <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected">
-                    <label for="numeros">Números</label>
-                  </li>
-                  <li>
-                    <input id="fruites" type="radio" value="fruites" name="tema" v-model="themeSelected">
-                    <label for="fruites">Fruites</label>
-                  </li>
-                  <li>
-                    <input id="images" type="radio" value="images" name="tema" v-model="themeSelected">
-                    <label for="images">Imatges</label>
-                  </li>
-                </ul>
-              </fieldset>
+              <h2 class="headers">Temàtica</h2>
+              <ul>
+                <li>
+                  <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected">
+                  <label for="numeros">Números</label>
+                </li>
+                <li>
+                  <input id="fruites" type="radio" value="fruits" name="tema" v-model="themeSelected">
+                  <label for="fruites">Fruites</label>
+                </li>
+              </ul>
             </div>
-
-            <!-- imatges -->
-            <div :style="{visibility: themeSelected == 'images'? 'visible' : 'hidden'}">
-              <fieldset class="tema">
-              <legend class="headers">Personalitzar imatges</legend>
-              <!-- <h2 class="headers">Temàtica</h2> -->
-                <ul>
-                  <li>
-                    <input id="numeros" type="file">
-                  </li>
-                </ul>
-              </fieldset>
-            </div>
-
             <!-- Botón "Guardar Configuración" -->
             <div class="button-container">
               <button class="button-configuration">Guardar Configuració</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -136,7 +105,7 @@ const themeSelected = ref("fruites");
   flex-direction: column;
   align-items: left;
   gap: 15px;
-  max-width: 360px;
+  max-width: 330px;
   width: 100%;
   margin: 0 auto;
   font-family: 'Inter', Helvetica, Arial;
@@ -147,21 +116,7 @@ const themeSelected = ref("fruites");
 .headers {
   text-align: left;
   font-size: 24px;
-  font-weight: 700;
-}
-
-fieldset {
-  border:0;
-  -webkit-appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  -moz-appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  width:95%;
-  margin:0 auto;
-  padding-bottom: 20px;
-}
-
-legend {
-  padding:0;
+  font-weight: 600;
 }
 
 ul {
@@ -188,12 +143,10 @@ input[type="radio"] {
   accent-color: var(--config-bg);
   width: 30px;
   height: 30px;
-
   -webkit-appearance: none;  /* Elimina los estilos predeterminados del navegador */
   -moz-appearance: none;  /* Elimina los estilos predeterminados del navegador */
   appearance: none;  /* Elimina los estilos predeterminados del navegador */
   outline: none;  /* Quita el contorno predeterminado al enfocar */
-  
   border: 2px solid var(--config-bg);
   border-radius: 50%;
   background-color: white;
@@ -208,7 +161,6 @@ input[type="radio"]::before {
   height: 18px;
   border-radius: 50%;
   background-color: var(--config-bg);
-
   position: absolute;
   top: 50%;
   left: 50%;
@@ -231,13 +183,9 @@ input[type="radio"]:checked::before {
 /* Estilo para el botón "Guardar Configuración" */
 .button-configuration {
   border-radius: 4px;
-  background: var(--action-button-bg);
+  background: var(--blau, #1747E7);
   padding: 8px 16px;
   color: white;
-  font-size:24px;
-  font-weight:700;
-}
-.button-configuration:hover {
-  background: var(--action-buttton-bg-hover);
+  font-size:18px;
 }
 </style>
