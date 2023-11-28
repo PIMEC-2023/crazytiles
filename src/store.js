@@ -34,7 +34,7 @@ export const store = reactive({
   gameConfig: {
     difficulty: 'easy', // 'easy' | 'medium' | 'hard'
     urlsArray: undefined,
-    sound: false,
+    sound: true,
     themeSelected: "numbers"
 
   }
