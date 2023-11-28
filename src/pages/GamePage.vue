@@ -41,7 +41,7 @@ const handleEndGame = (totalTime, attempts) => {
     <GameBoard
       :audio="true"
       difficulty="easy"
-      :urls-array="fruitsArray"
+      :urls-array="store.gameConfig.urlsArray"
       @game-ended="handleEndGame"
     />
     <!-- <GameBoard :audio="true" difficulty="easy" @game-ended="handleEndGame" /> -->

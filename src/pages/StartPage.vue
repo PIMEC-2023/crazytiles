@@ -1,5 +1,6 @@
 <script setup>
 import { setGameConfig, changePage, store } from "@/store";
+import ConfigTest from "../components/ConfigTest.vue";
 
 </script>
 
@@ -14,6 +15,7 @@ import { setGameConfig, changePage, store } from "@/store";
     </div>
     <div>
       <setGameConfig />
+      <ConfigTest />
     </div>
   </main>
 </template>

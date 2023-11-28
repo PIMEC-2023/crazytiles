@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { useSound } from '@vueuse/sound'
+import { useSound } from "@vueuse/sound";
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
@@ -21,10 +21,22 @@ const props = defineProps({
 
 const emit = defineEmits(["gameEnded"]);
 
-const errorAudioSound = useSound(errorAudio, {volume: 0.1, soundEnabled: props.audio})
-const flipCardAudioSound = useSound(flipCardAudio, {volume: 0.1, soundEnabled: props.audio})
-const successAudioSound = useSound(successAudio, {volume: 0.4, soundEnabled: props.audio})
-const victoryAudioSound = useSound(victoryAudio, {volume: 0.3, soundEnabled: props.audio})
+const errorAudioSound = useSound(errorAudio, {
+  volume: 0.1,
+  soundEnabled: props.audio,
+});
+const flipCardAudioSound = useSound(flipCardAudio, {
+  volume: 0.1,
+  soundEnabled: props.audio,
+});
+const successAudioSound = useSound(successAudio, {
+  volume: 0.4,
+  soundEnabled: props.audio,
+});
+const victoryAudioSound = useSound(victoryAudio, {
+  volume: 0.3,
+  soundEnabled: props.audio,
+});
 
 const difficultyLevels = {
   easy: {
@@ -66,6 +78,9 @@ const selectedCards = ref({
     this.clickedCards = [];
   },
   isMatch() {
+    if (this.clickedCards.length !== 2) {
+      return;
+    }
     return this.clickedCards[0] === this.clickedCards[1];
   },
 });
@@ -89,9 +104,7 @@ const checkCards = (card, index) => {
     selectedCards.value.addCard(card);
   }
 
-  flipCardAudioSound.play()
-
-//   playAudio(flipCardAudio, 0.1);
+  flipCardAudioSound.play();
 
   if (selectedCards.value.clickedCards.length === 2) {
     if (selectedCards.value.isMatch()) {

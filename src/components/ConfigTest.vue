@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import UploadWidget from "@/components/UploadWidget.vue";
+import { store } from "../store";
+
 
 // TODO importar el resto de frutas
 // TODO Poner esto en configuración
@@ -35,13 +37,28 @@ const handleUploadedPhotos = (uploadedPhotos) => {
   photosUrls.value = uploadedPhotos.map((u) =>
     u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
   );
+  store.gameConfig.urlsArray = photosUrls.value;
 };
 </script>
 
 <template>
   <div>
-    <UploadWidget @photos="handleUploadedPhotos" />
+    <UploadWidget @photos="handleUploadedPhotos">
+      <button>Subir imágenes</button>
+    </UploadWidget>
+  </div>
+  <div class="thubnail-photos">
+    <img :key="u.id" v-for="u in photosUrls" :src="u" alt="uploaded photo" />
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.thubnail-photos {
+  display: flex;
+  gap: 4px;
+}
+
+.thubnail-photos img {
+  width: 50px;
+}
+</style>
