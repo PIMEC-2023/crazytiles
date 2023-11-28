@@ -1,181 +1,198 @@
-
 <script setup>
+import { onMounted, ref } from "vue";
+import { useSound } from '@vueuse/sound'
+import CardTile from "./CardTile.vue";
+import GameScore from "./GameScore.vue";
+import GameTimer from "./GameTimer.vue";
 
-import { ref } from "vue";
-import { playAudioFile } from "../utils";
+import { board } from "@/utils.js";
+import { formatTime } from "@/utils.js";
 
 import errorAudio from "@/assets/audio/error.mp3";
 import flipCardAudio from "@/assets/audio/flipcard.mp3";
 import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
-import { changePage } from "../store";
-import VictoryPage from "../pages/VictoryPage.vue";
 
-// props
 const props = defineProps({
-    audio: Boolean
-})
+  audio: Boolean,
+  difficulty: String,
+  urlsArray: Array,
+});
 
-// Dimensiones del tablero
-const dimensionsX = ref(2);
-const dimensionsY = ref(2);
+const emit = defineEmits(["gameEnded"]);
 
-// en el caso de que se aplique que el usuario elija el tamaño del tablero X - Y:
-const board = () => {
-    // aquí realmente se pondra el array de fotos o símbolos
-    const tilesArray = [];
-    const totalTiles = dimensionsX.value * dimensionsY.value;
-    for (let i = 1; i <= totalTiles / 2; i++) {
-        tilesArray.push(i);
-    }
-    for (let i = 1; i <= totalTiles / 2; i++) {
-        tilesArray.push(i);
-    }
-    shuffleArray(tilesArray)
-    return tilesArray;
+const errorAudioSound = useSound(errorAudio, { volume: 0.1, soundEnabled: props.audio })
+const flipCardAudioSound = useSound(flipCardAudio, { volume: 0.1, soundEnabled: props.audio })
+const successAudioSound = useSound(successAudio, { volume: 0.4, soundEnabled: props.audio })
+const victoryAudioSound = useSound(victoryAudio, { volume: 0.3, soundEnabled: props.audio })
+
+const difficultyLevels = {
+  easy: {
+    x: 2,
+    y: 2,
+  },
+  medium: {
+    x: 4,
+    y: 6,
+  },
+  hard: {
+    x: 4,
+    y: 8,
+  },
 };
 
-const shuffleArray = array => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-}
-
-// Valores de las cartas
-const cards = ref(board());
-
-// Variable que designa si estamos jugando o no
-const isPlaying = ref(false);
-
-// Variable que designa si hemos terminado la partida
-const isFinished = ref(false)
-
-// Variable que designa si hemos acertado o no la pareja
-const success = ref(false)
-
-// Variable que designa si debemos girar una carta o no
-// const isFlipped = ref(false)
-
-// Referencia a la primera carta volteada
-const firstSelectedCard = ref(null);
-
-// Referencia a la segunda carta volteada
-const secondSelectedCard = ref(null);
-
-// Array con cartas acertadas (quizás no necesitamos que sea ref.)
+const dimensionsX = ref(null);
+const dimensionsY = ref(null);
+const cards = ref([]);
+const firstSelectedCardIndex = ref(null);
+const secondSelectedCardIndex = ref(null);
 const matches = ref([]);
+const attempts = ref(0);
+const counter = ref(0);
 
 const newGame = () => {
-    // SI FINALMENTE IMPLEMENTAMOS ELECCION TABLERO (X, Y) NO SE NECESITA:
-    // if (dimensions.value % 2 !== 0) {
-    //   throw new Error("The dimension of the board must be an even number.");
-    // }
-    console.log("Game starts");
-    isPlaying.value = true;
-    isFinished.value = false
+  console.log("Game starts");
+  cards.value = board(dimensionsX.value, dimensionsY.value, props.urlsArray);
+  matches.value = [];
+  attempts.value = 0;
 };
 
-let firstClick = false;
+const selectedCards = ref({
+  clickedCards: [],
+  addCard(card) {
+    this.clickedCards.push(card);
+  },
+  reset() {
+    this.clickedCards = [];
+  },
+  isMatch() {
+    return this.clickedCards[0] === this.clickedCards[1];
+  },
+});
+
 let isTimeoutActive = false;
-
 const checkCards = (card, index) => {
-    if (isTimeoutActive) {
+  if (isTimeoutActive) {
+    return;
+  }
+  if (
+    selectedCards.value.clickedCards.length === 1 &&
+    firstSelectedCardIndex.value === index
+  ) {
+    return;
+  } else if (selectedCards.value.clickedCards.length === 0) {
+    firstSelectedCardIndex.value = index;
+    selectedCards.value.addCard(card);
+  } else if (selectedCards.value.clickedCards.length === 1) {
+    secondSelectedCardIndex.value = index;
+    attempts.value++;
+    selectedCards.value.addCard(card);
+  }
+
+  flipCardAudioSound.play()
+
+  //   playAudio(flipCardAudio, 0.1);
+
+  if (selectedCards.value.clickedCards.length === 2) {
+    if (selectedCards.value.isMatch()) {
+      matches.value.push(card);
+    }
+    isTimeoutActive = true;
+    setTimeout(() => {
+      if (matches.value.length * 2 === cards.value.length) {
+        victoryAudioSound.play();
+        let totalTime = handleCounter();
+        emit("gameEnded", totalTime, attempts.value);
         return;
-    }
-
-    if (firstClick === false) {
-        firstSelectedCard.value = index;
-        firstClick = true;
-    } else {
-        secondSelectedCard.value = index;
-        firstClick = false;
-    }
-    playAudio(flipCardAudio, 0.1);
-
-    if (secondSelectedCard.value !== null) {
-        if (cards.value[firstSelectedCard.value] === cards.value[secondSelectedCard.value]) {
-            success.value = true
-            matches.value.push(card);
-        } else {
-            success.value = false;
-        }
-        isTimeoutActive = true;
-
-        setTimeout(() => {
-            // comprobación end game
-            if (matches.value.length * 2 === cards.value.length) {
-                playAudio(victoryAudio, 0.3);
-                isFinished.value = true;
-                isPlaying.value = false;
-                matches.value = [];
-                changePage('VictoryPage')
-                return;
-            }
-            success.value ? playAudio(successAudio, 0.4) : playAudio(errorAudio, 0.1);
-            firstSelectedCard.value = null;
-            secondSelectedCard.value = null;
-            isTimeoutActive = false;
-        }, 1000);
-    }
+      }
+      matches.value.includes(card)
+        ? successAudioSound.play()
+        : errorAudioSound.play();
+      firstSelectedCardIndex.value = null;
+      secondSelectedCardIndex.value = null;
+      isTimeoutActive = false;
+    }, 1000);
+    selectedCards.value.reset();
+  }
 };
 
 const disappearCard = (card) => {
-    return {
-        opacity: matches.value.includes(card) ? "0" : "1",
-        transition: "opacity 1s",
-    };
+  return {
+    opacity: matches.value.includes(card) ? "0" : "1",
+    transition: "opacity 1s",
+  };
 };
 
-function playAudio(audioFile, volume) {
-    if (!props.audio) { return }
-    playAudioFile(audioFile, volume)
-}
+const handleCounter = () => {
+  const totalSeconds = counter.value.totalSeconds;
+  const min = Math.floor(totalSeconds / 60);
+  const sec = totalSeconds % 60;
+  return `${formatTime(min)}:${formatTime(sec)}`;
+};
 
+onMounted(() => {
+  const { x, y } = difficultyLevels[props.difficulty];
+  dimensionsX.value = x;
+  dimensionsY.value = y;
+  newGame();
+});
 </script>
 
 <template>
-    <h1>Crazy Tiles</h1>
-    <main>
-        <section v-if="isPlaying" class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
-            <article v-for="(card, index) in cards" :key="index">
-                <button class="tile" @click="checkCards(card, index)" :disabled="matches.includes(card)"
-                    :style="disappearCard(card)">
-                    <!-- v-show="!matches.includes(card)" -->
-                    <span v-show="firstSelectedCard == index || secondSelectedCard == index">{{ card }}</span>
-                </button>
-            </article>
-        </section>
-        <section v-else>
-            <button @click="newGame">{{ isFinished ? "New Game" : "Start Game" }}</button>
-        </section>
-        <section v-show="isFinished">
-            <h2>Has ganado</h2>
-        </section>
-    </main>
+  <main>
+    <div class="main-page-game">
+      <GameTimer ref="counter" />
+      <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
+        <article v-for="(card, index) in cards" :key="index">
+          <div>
+            <CardTile :is-revealed="
+              firstSelectedCardIndex === index ||
+              secondSelectedCardIndex === index
+            " :is-disabled="matches.includes(card)" :style="disappearCard(card)" @click="checkCards(card, index)">
+              <span v-if="!urlsArray">{{ card }}</span>
+              <img v-else :src="card" />
+              <!-- :alt="card.substr(24)" -->
+            </CardTile>
+          </div>
+        </article>
+      </section>
+      <div class="score">
+        <GameScore :score="attempts" text="Intents"></GameScore>
+        <GameScore :score="matches.length" text="Encerts"></GameScore>
+      </div>
+    </div>
+  </main>
 </template>
 
 <style scoped>
+.main-page-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 .game {
-    display: grid;
-    justify-content: center;
+  display: grid;
+  justify-content: center;
+  gap: 2px;
 }
 
-article {
-    width: 50px;
-    height: 50px;
+.score {
+  display: flex;
+  gap: 10px;
 }
 
-.tile {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    border: 1px solid #404040;
-    color: red;
-    /* background-image: url(./assets/images/perro.jpeg); */
+span.card span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+}
+
+span.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

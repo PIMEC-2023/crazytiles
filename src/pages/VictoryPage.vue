@@ -1,5 +1,5 @@
 <script setup>
-import { changePage } from "@/store";
+import { changePage, store } from "@/store";
 import ConfettiExplosion from "vue-confetti-explosion";
 </script>
 
@@ -7,15 +7,15 @@ import ConfettiExplosion from "vue-confetti-explosion";
     <div class="victory">
         <section>
             <div style="position: fixed; top:100px">
-                <ConfettiExplosion  :particleCount="200" :force="0.5" :particleSize="12" :duration="4000"
-                    :stageHeight="900" :stageWidth="1200" />
+                <ConfettiExplosion :particleCount="200" :force="0.5" :particleSize="12" :duration="4000" :stageHeight="900"
+                    :stageWidth="1200" />
             </div>
             <img src="@/assets/imgs/logo-isotype.svg" alt="logo">
             <h1>FELICITATS!</h1>
 
             <p>Has finalitzat el joc!</p>
-            <p><span>TEMPS: </span> minuts</p>
-            <p><span>INTENTS: </span> </p>
+            <p><span>TEMPS: {{ store.finalScore.elapsedTime }} </span></p>
+            <p><span>INTENTS: {{ store.finalScore.attempts }}</span> </p>
 
             <div class="buttons">
                 <button @click="changePage('GamePage')" class="restart__button">Reiniciar</button>
@@ -98,4 +98,5 @@ button:hover {
     background-color: var(--action-buttton-bg-hover);
     color: white;
 
-}</style>
+}
+</style>

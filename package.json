@@ -9,6 +9,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@vueuse/sound": "^2.0.1",
+    "cloudinary": "^1.41.0",
     "vue": "^3.3.4",
     "vue-confetti-explosion": "^1.0.2"
   },
