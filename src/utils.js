@@ -10,7 +10,7 @@ export const shuffleArray = (array) => {
   export const board = (x, y, arrayImgs) => {
     const tilesArray = [];
     const totalTiles = x * y;
-    if (arrayImgs) {
+    if (arrayImgs == []) {
       shuffleArray(arrayImgs);
     }
     for (let i = 0; i < totalTiles / 2; i++) {

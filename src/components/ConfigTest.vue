@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
+import { useLocalStorage } from "vue-composable";
 import UploadWidget from "@/components/UploadWidget.vue";
 import { store } from "../store";
-
 
 // TODO importar el resto de frutas
 // TODO Poner esto en configuración
@@ -30,14 +30,20 @@ const fruitsArray = [
   grapes,
   kiwi,
 ];
+
 const photosUrls = ref([]);
+
+const key = "localStorage";
+
+const { storage } = useLocalStorage(key);
+
 const handleUploadedPhotos = (uploadedPhotos) => {
-  //
-  console.log("handleUploadedPhotos: ", uploadedPhotos);
+  storage.value = [];
   photosUrls.value = uploadedPhotos.map((u) =>
     u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
   );
-  store.gameConfig.urlsArray = photosUrls.value;
+  storage.value = photosUrls.value;
+  store.gameConfig.urlsArray = storage.value;
 };
 </script>
 
@@ -50,6 +56,7 @@ const handleUploadedPhotos = (uploadedPhotos) => {
   <div class="thubnail-photos">
     <img :key="u.id" v-for="u in photosUrls" :src="u" alt="uploaded photo" />
   </div>
+  <div>{{ storage }}</div>
 </template>
 
 <style scoped>
