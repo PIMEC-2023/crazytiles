@@ -1,15 +1,56 @@
 <script setup>
 import { ref } from "vue";
+import { store, setGameConfig } from "@/store.js"
+import strawberry from "@/assets/imgs/frutas/maduixa.svg";
+import banana from "@/assets/imgs/frutas/platan.svg";
+import orange from "@/assets/imgs/frutas/taronja.svg";
+import peach from "@/assets/imgs/frutas/pressec.svg";
+import blueberries from "@/assets/imgs/frutas/nabius.svg";
+import pear from "@/assets/imgs/frutas/pera.svg";
+import cherries from "@/assets/imgs/frutas/cireres.svg";
+import lemon from "@/assets/imgs/frutas/llimona.svg";
+import grapes from "@/assets/imgs/frutas/raim.svg";
+import kiwi from "@/assets/imgs/frutas/kiwi.svg";
 
-const props = defineProps({
+defineProps({
   show: Boolean
 });
 
-const difficultySelected = ref("mitjana");
-const soundSelected = ref("on");
+const emit = defineEmits(['close'])
+
+
+
+const fruitsArray = [
+  strawberry,
+  banana,
+  orange,
+  peach,
+  blueberries,
+  pear,
+  cherries,
+  lemon,
+  grapes,
+  kiwi,
+];
+
+const difficultySelected = ref(store.gameConfig.difficulty);
+const soundSelected = ref(store.gameConfig.sound);
 const themeSelected = ref("fruites");
 
+const handleSubmit = () => {
+  console.log("Configuració formulari: ", difficultySelected.value, soundSelected.value, themeSelected.value);
 
+
+
+  if (themeSelected.value == 'fruites') {
+    setGameConfig(difficultySelected.value, fruitsArray, soundSelected.value)
+  } else if (themeSelected.value == 'numbers') {
+    setGameConfig(difficultySelected.value, [], soundSelected.value)
+  }
+
+  emit('close');
+
+}
 
 </script>
 
@@ -25,29 +66,29 @@ const themeSelected = ref("fruites");
             </button>
           </div>
           <!-- Inicio FORM -->
-          <form class="container">
+          <form @submit.prevent="handleSubmit" class="container">
             <!-- dficultat -->
             <div>
               <slot name="dificultat">
 
                 <fieldset class="dificultat">
-                <legend class="headers">Dificultat</legend>
-                <!-- <h2 class="headers">Dificultat</h2> -->
-                <ul>
-                  <li>
-                    <input id="facil" type="radio" value="facil" v-model="difficultySelected" name="dificultat">
-                    <label for="facil">Fàcil</label>
-                  </li>
-                  <li>
-                    <input id="mitjana" type="radio" value="mitjana" v-model="difficultySelected" name="dificultat">
-                    <label for="mitjana">Mitjana</label>
-                  </li>
-                  <li>
-                    <input id="dificil" type="radio" value="dificil" v-model="difficultySelected" name="dificultat">
-                    <label for="dificil">Difícil</label>
-                  </li>
-                </ul>
-              </fieldset>
+                  <legend class="headers">Dificultat</legend>
+                  <!-- <h2 class="headers">Dificultat</h2> -->
+                  <ul>
+                    <li>
+                      <input id="facil" type="radio" value="easy" v-model="difficultySelected" name="dificultat">
+                      <label for="facil">Fàcil</label>
+                    </li>
+                    <li>
+                      <input id="mitjana" type="radio" value="medium" v-model="difficultySelected" name="dificultat">
+                      <label for="mitjana">Mitjana</label>
+                    </li>
+                    <li>
+                      <input id="dificil" type="radio" value="hard" v-model="difficultySelected" name="dificultat">
+                      <label for="dificil">Difícil</label>
+                    </li>
+                  </ul>
+                </fieldset>
 
               </slot>
             </div>
@@ -55,30 +96,30 @@ const themeSelected = ref("fruites");
             <div class="so">
               <slot name="so">
                 <fieldset class="so">
-                <legend class="headers">So</legend>
-                <!-- <h2 class="headers">So</h2> -->
-                <ul>
-                  <li>
-                    <input id="on" type="radio" value="on" v-model="soundSelected" name="so">
-                    <label for="on">On</label>
-                  </li>
-                  <li>
-                    <input id="off" type="radio" value="off" v-model="soundSelected" name="so">
-                    <label for="off">Off</label>
-                  </li>
-                  <li>
-                    <span>El so està: {{ soundSelected }}</span>
-                  </li>
-                </ul>
-              </fieldset>
+                  <legend class="headers">So</legend>
+                  <!-- <h2 class="headers">So</h2> -->
+                  <ul>
+                    <li>
+                      <input id="on" type="radio" :value="true" v-model="soundSelected" name="so">
+                      <label for="on">On</label>
+                    </li>
+                    <li>
+                      <input id="off" type="radio" :value="false" v-model="soundSelected" name="so">
+                      <label for="off">Off</label>
+                    </li>
+                    <li>
+                      <span>El so està: {{ soundSelected ? 'activat' : 'desactivat' }}</span>
+                    </li>
+                  </ul>
+                </fieldset>
               </slot>
             </div>
 
             <!-- tematica -->
             <div>
               <fieldset class="tema">
-              <legend class="headers">Temàtica</legend>
-              <!-- <h2 class="headers">Temàtica</h2> -->
+                <legend class="headers">Temàtica</legend>
+                <!-- <h2 class="headers">Temàtica</h2> -->
                 <ul>
                   <li>
                     <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected">
@@ -97,10 +138,10 @@ const themeSelected = ref("fruites");
             </div>
 
             <!-- imatges -->
-            <div :style="{visibility: themeSelected == 'images'? 'visible' : 'hidden'}">
+            <div :style="{ visibility: themeSelected == 'images' ? 'visible' : 'hidden' }">
               <fieldset class="tema">
-              <legend class="headers">Personalitzar imatges</legend>
-              <!-- <h2 class="headers">Temàtica</h2> -->
+                <legend class="headers">Personalitzar imatges</legend>
+                <!-- <h2 class="headers">Temàtica</h2> -->
                 <ul>
                   <li>
                     <input id="numeros" type="file">
@@ -151,17 +192,20 @@ const themeSelected = ref("fruites");
 }
 
 fieldset {
-  border:0;
-  -webkit-appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  -moz-appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  width:95%;
-  margin:0 auto;
+  border: 0;
+  -webkit-appearance: none;
+  /* Elimina los estilos predeterminados del navegador */
+  -moz-appearance: none;
+  /* Elimina los estilos predeterminados del navegador */
+  appearance: none;
+  /* Elimina los estilos predeterminados del navegador */
+  width: 95%;
+  margin: 0 auto;
   padding-bottom: 20px;
 }
 
 legend {
-  padding:0;
+  padding: 0;
 }
 
 ul {
@@ -171,16 +215,21 @@ ul {
 
 /* Estilización de los radio buttons personalizados */
 ul li {
-  list-style-type: none;  /* Quita los marcadores de lista */
+  list-style-type: none;
+  /* Quita los marcadores de lista */
 
   display: flex;
   align-items: center;
   gap: 5px;
 
-  -webkit-user-select: none;  /* Evita la selección de texto en navegadores WebKit */
-  -moz-user-select: none;  /* Evita la selección de texto en navegadores Firefox */
-  -ms-user-select: none;  /* Evita la selección de texto en navegadores IE/Edge */
-  user-select: none;  /* Evita la selección de texto en navegadores */
+  -webkit-user-select: none;
+  /* Evita la selección de texto en navegadores WebKit */
+  -moz-user-select: none;
+  /* Evita la selección de texto en navegadores Firefox */
+  -ms-user-select: none;
+  /* Evita la selección de texto en navegadores IE/Edge */
+  user-select: none;
+  /* Evita la selección de texto en navegadores */
 }
 
 /* Estilos para los botones de radio */
@@ -189,11 +238,15 @@ input[type="radio"] {
   width: 30px;
   height: 30px;
 
-  -webkit-appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  -moz-appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  appearance: none;  /* Elimina los estilos predeterminados del navegador */
-  outline: none;  /* Quita el contorno predeterminado al enfocar */
-  
+  -webkit-appearance: none;
+  /* Elimina los estilos predeterminados del navegador */
+  -moz-appearance: none;
+  /* Elimina los estilos predeterminados del navegador */
+  appearance: none;
+  /* Elimina los estilos predeterminados del navegador */
+  outline: none;
+  /* Quita el contorno predeterminado al enfocar */
+
   border: 2px solid var(--config-bg);
   border-radius: 50%;
   background-color: white;
@@ -212,13 +265,16 @@ input[type="radio"]::before {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);  /* Centra el círculo */
-  opacity: 0;  /* Inicialmente oculta el círculo central */
+  transform: translate(-50%, -50%);
+  /* Centra el círculo */
+  opacity: 0;
+  /* Inicialmente oculta el círculo central */
 }
 
 /* Mostrar el círculo central cuando el botón de radio está seleccionado */
 input[type="radio"]:checked::before {
-  opacity: 1;  /* Muestra el círculo central cuando el botón está marcado */
+  opacity: 1;
+  /* Muestra el círculo central cuando el botón está marcado */
 }
 
 /* Estilo para el contenedor del botón */
@@ -234,9 +290,10 @@ input[type="radio"]:checked::before {
   background: var(--action-button-bg);
   padding: 8px 16px;
   color: white;
-  font-size:24px;
-  font-weight:700;
+  font-size: 24px;
+  font-weight: 700;
 }
+
 .button-configuration:hover {
   background: var(--action-buttton-bg-hover);
 }
