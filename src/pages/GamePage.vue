@@ -14,7 +14,7 @@ const handleEndGame = (totalTime, attempts) => {
 <template>
     <div>
         <!-- <GameBoard difficulty="easy" :urls-array="fruitsArray" /> -->
-        <GameBoard :audio="store.gameConfig.sound" :difficulty="store.gameConfig.difficulty" @game-ended="handleEndGame" />
+        <GameBoard :audio="store.gameConfig.sound" :difficulty="store.gameConfig.difficulty" :urls-array="store.gameConfig.urlsArray" @game-ended="handleEndGame" />
         <!-- <GameBoard difficulty="easy" :urls-array="uploadedPhotos" /> -->
     </div>
 </template>
