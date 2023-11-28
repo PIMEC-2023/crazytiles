@@ -21,10 +21,10 @@ const props = defineProps({
 
 const emit = defineEmits(["gameEnded"]);
 
-const errorAudioSound = useSound(errorAudio, {volume: 0.1, soundEnabled: props.audio})
-const flipCardAudioSound = useSound(flipCardAudio, {volume: 0.1, soundEnabled: props.audio})
-const successAudioSound = useSound(successAudio, {volume: 0.4, soundEnabled: props.audio})
-const victoryAudioSound = useSound(victoryAudio, {volume: 0.3, soundEnabled: props.audio})
+const errorAudioSound = useSound(errorAudio, { volume: 0.1, soundEnabled: props.audio })
+const flipCardAudioSound = useSound(flipCardAudio, { volume: 0.1, soundEnabled: props.audio })
+const successAudioSound = useSound(successAudio, { volume: 0.4, soundEnabled: props.audio })
+const victoryAudioSound = useSound(victoryAudio, { volume: 0.3, soundEnabled: props.audio })
 
 const difficultyLevels = {
   easy: {
@@ -91,7 +91,7 @@ const checkCards = (card, index) => {
 
   flipCardAudioSound.play()
 
-//   playAudio(flipCardAudio, 0.1);
+  //   playAudio(flipCardAudio, 0.1);
 
   if (selectedCards.value.clickedCards.length === 2) {
     if (selectedCards.value.isMatch()) {
@@ -139,25 +139,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Crazy Tiles</h1>
   <main>
     <div class="main-page-game">
       <GameTimer ref="counter" />
-      <section
-        class="game"
-        :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }"
-      >
+      <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
         <article v-for="(card, index) in cards" :key="index">
           <div>
-            <CardTile
-              :is-revealed="
-                firstSelectedCardIndex === index ||
-                secondSelectedCardIndex === index
-              "
-              :is-disabled="matches.includes(card)"
-              :style="disappearCard(card)"
-              @click="checkCards(card, index)"
-            >
+            <CardTile :is-revealed="
+              firstSelectedCardIndex === index ||
+              secondSelectedCardIndex === index
+            " :is-disabled="matches.includes(card)" :style="disappearCard(card)" @click="checkCards(card, index)">
               <span v-if="!urlsArray">{{ card }}</span>
               <img v-else :src="card" />
               <!-- :alt="card.substr(24)" -->
@@ -166,8 +157,8 @@ onMounted(() => {
         </article>
       </section>
       <div class="score">
-        <GameScore :score="attempts" text="Intentos"></GameScore>
-        <GameScore :score="matches.length" text="Aciertos"></GameScore>
+        <GameScore :score="attempts" text="Intents"></GameScore>
+        <GameScore :score="matches.length" text="Encerts"></GameScore>
       </div>
     </div>
   </main>

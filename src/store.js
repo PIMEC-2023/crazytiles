@@ -1,10 +1,12 @@
 // store.js
 import StartPage from "@/pages/StartPage.vue"
 import GamePage from "@/pages/GamePage.vue"
+import VictoryPage from "@/pages/VictoryPage.vue"
 
 const pages = {
     StartPage,
-    GamePage
+    GamePage,
+    VictoryPage,
 }
 
 import { reactive } from 'vue'

@@ -28,7 +28,7 @@ const fruitsArray = [
 
 const handleEndGame = (totalTime, attempts) => {
   console.log(totalTime, attempts);
-  changePage("StartPage"); // TODO: tenemos que en realidad ir a VictoryPage y ver como le pasamos totalTime y attemps
+  changePage('VictoryPage');
   store.finalScore.elapsedTime = totalTime;
   store.finalScore.attempts = attempts;
 };
@@ -38,19 +38,14 @@ const handleEndGame = (totalTime, attempts) => {
   <div>
     <!-- Para subir imágenes custom -->
     <!-- <button @click="widget.open()">Subir imágenes</button> -->
-    <GameBoard
-      :audio="true"
-      difficulty="easy"
-      :urls-array="fruitsArray"
-      @game-ended="handleEndGame"
-    />
+    <GameBoard :audio="true" difficulty="easy" :urls-array="fruitsArray" @game-ended="handleEndGame" />
     <!-- <GameBoard :audio="true" difficulty="easy" @game-ended="handleEndGame" /> -->
     <!-- <GameBoard
-      :audio="true"
-      difficulty="easy"
-      :urls-array="photosUls"
-      @game-ended="handleEndGame"
-    /> -->
+        :audio="true"
+        difficulty="easy"
+        :urls-array="photosUls"
+        @game-ended="handleEndGame"
+      /> -->
   </div>
 </template>
 
