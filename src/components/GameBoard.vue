@@ -3,7 +3,8 @@ import { onMounted, ref, defineEmits } from "vue";
 import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
-import FullScreen from "./FullScreen.vue";
+import { useFullscreen } from '@vueuse/core';
+
 
 
 import { board } from "@/assets/utils.js";
@@ -52,6 +53,7 @@ const isFinished = ref(false);
 
 // Variable que designa si hemos acertado o no la pareja
 const success = ref(false)
+const { toggle:toggleFullScreen, exit:exitFullScreen } = useFullscreen();
 
 // Variable que designa si debemos girar una carta o no
 // const isFlipped = ref(false)
@@ -127,6 +129,7 @@ const checkCards = (card, index) => {
         // Opción 3: emitir un evento para indicar a GamePage que he acabado con el totalTime y numero de intentos
         let totalTime = handleCounter();
         emit('gameEnded', totalTime, attempts.value)
+        exitFullScreen();
         return
       }
       success.value ? playAudio(successAudio, 0.4) : playAudio(errorAudio, 0.1);
@@ -170,13 +173,14 @@ onMounted(() => {
 <template>
   <h1>Crazy Tiles</h1>
   <main>
-    <div class="main-page-game">
+    <div ref="" class="main-page-game">
       <div style="display: flex;">
 
         <GameTimer ref="counter" :start="isPlaying" />
-        <FullScreen>
-
-        </FullScreen>
+        
+          <button @click="toggleFullScreen" style="padding-top: auto; padding-left: 10px;"><img src="src\assets\imgs\icon-full_screen.svg"
+                alt=""></button>
+       
       </div>
       <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
         <article v-for="(card, index) in cards" :key="index">
