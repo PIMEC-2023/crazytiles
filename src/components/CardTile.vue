@@ -1,4 +1,5 @@
 <script setup>
+
 defineProps(["isRevealed", 'isDisabled']);
 </script>
 
@@ -21,7 +22,7 @@ div {
 .tile {
   width: 100%;
   height: 100%;
-  background: url("src/assets/imgs/tile-back.svg") no-repeat;
+  background: url("@/assets/imgs/tile-back.svg") no-repeat;
   background-size: cover;
   background-position: center;
 }

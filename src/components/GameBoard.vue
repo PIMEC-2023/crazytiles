@@ -17,6 +17,8 @@ import flipCardAudio from "@/assets/audio/flipcard.mp3";
 import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
 
+import fullScreenIcon from "@/assets/imgs/icon-full_screen.svg";
+
 const props = defineProps({
   audio: Boolean,
   difficulty: String,
@@ -150,8 +152,8 @@ onMounted(() => {
     <div class="main-page-game">
       <div style="display: flex;">
         <GameTimer ref="counter" />
-        <button @click="toggleFullScreen" style="padding-top: auto; padding-left: 10px;"><img
-            src="src\assets\imgs\icon-full_screen.svg" alt=""></button>
+        <button @click="toggleFullScreen" style="padding-top: auto; padding-left: 10px;"><img :src="fullScreenIcon"
+            alt=""></button>
       </div>
 
       <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
