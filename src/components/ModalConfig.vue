@@ -11,6 +11,15 @@ import cherries from "@/assets/imgs/frutas/cireres.svg";
 import lemon from "@/assets/imgs/frutas/llimona.svg";
 import grapes from "@/assets/imgs/frutas/raim.svg";
 import kiwi from "@/assets/imgs/frutas/kiwi.svg";
+import avocado from "@/assets/imgs/frutas/avocat.svg";
+import raspberries from "@/assets/imgs/frutas/gerds.svg";
+import pomegranate from "@/assets/imgs/frutas/magrana.svg";
+import redCurrant from "@/assets/imgs/frutas/nabius-vermells.svg";
+import pineapple from "@/assets/imgs/frutas/pinya.svg";
+import apple from "@/assets/imgs/frutas/poma.svg";
+import redApple from "@/assets/imgs/frutas/poma-vermella.svg";
+import watermelon from "@/assets/imgs/frutas/sindria.svg";
+
 
 defineProps({
   show: Boolean
@@ -31,21 +40,30 @@ const fruitsArray = [
   lemon,
   grapes,
   kiwi,
+  avocado,
+  raspberries,
+  pomegranate,
+  redCurrant,
+  pineapple,
+  apple,
+  redApple,
+  watermelon
+
 ];
 
 const difficultySelected = ref(store.gameConfig.difficulty);
 const soundSelected = ref(store.gameConfig.sound);
-const themeSelected = ref("fruites");
+const themeSelected = ref(store.gameConfig.themeSelected);
 
 const handleSubmit = () => {
   console.log("Configuració formulari: ", difficultySelected.value, soundSelected.value, themeSelected.value);
 
 
 
-  if (themeSelected.value == 'fruites') {
-    setGameConfig(difficultySelected.value, fruitsArray, soundSelected.value)
+  if (themeSelected.value == 'fruits') {
+    setGameConfig(difficultySelected.value, fruitsArray, soundSelected.value, themeSelected.value)
   } else if (themeSelected.value == 'numbers') {
-    setGameConfig(difficultySelected.value, [], soundSelected.value)
+    setGameConfig(difficultySelected.value, undefined, soundSelected.value, themeSelected.value)
   }
 
   emit('close');
@@ -56,9 +74,9 @@ const handleSubmit = () => {
 
 <template>
   <Transition name="modal">
-    <div v-if="show" class="modal-mask">
-      <div class="modal-container">
-        <div class="modal-menu">
+  <div v-if="show" class="modal-mask">
+    <div class="modal-container">
+      <div class="modal-menu">
           <!-- creu -->
           <div class="modal-header">
             <button class="modal-default-button" @click="$emit('close')">
@@ -126,13 +144,13 @@ const handleSubmit = () => {
                     <label for="numeros">Números</label>
                   </li>
                   <li>
-                    <input id="fruites" type="radio" value="fruites" name="tema" v-model="themeSelected">
+                    <input id="fruites" type="radio" value="fruits" name="tema" v-model="themeSelected">
                     <label for="fruites">Fruites</label>
                   </li>
-                  <li>
-                    <input id="images" type="radio" value="images" name="tema" v-model="themeSelected">
-                    <label for="images">Imatges</label>
-                  </li>
+                  <!-- <li>
+                              <input id="images" type="radio" value="images" name="tema" v-model="themeSelected">
+                              <label for="images">Imatges</label>
+                            </li> -->
                 </ul>
               </fieldset>
             </div>

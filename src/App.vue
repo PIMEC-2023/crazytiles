@@ -1,6 +1,6 @@
 <script setup>
 // import DesignGuides from './components/DesignGuides.vue';
-import { setGameConfig, changePage, getCurrentPage } from "@/store";
+import { setGameConfig, changePage, getCurrentPage, store } from "@/store";
 import NavBurguer from "./components/NavBurguer.vue";
 import Logo from "@/assets/imgs/logo-isotype.svg"
 
