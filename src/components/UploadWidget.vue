@@ -1,7 +1,9 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from "vue";
 
-const uploadedPhotos = ref([])
+const emit = defineEmits(["photos"]);
+
+const uploadedPhotos = ref([]);
 
 const widget = window.cloudinary.createUploadWidget(
   {
@@ -9,26 +11,39 @@ const widget = window.cloudinary.createUploadWidget(
     upload_preset: import.meta.env.VITE_APP_UPLOAD_PRESET,
     cropping: true,
     showSkipCropButton: false,
-    croppingAspectRatio: 1
+    croppingAspectRatio: 1,
+    minImageWidth: 200,
+    croppingValidateDimensions: true,
   },
   (error, result) => {
-    if (!error && result && result.event === 'success') {
-      console.log('Done uploading...', result.info)
-      uploadedPhotos.value.push(result.info)
+    if (!error && result && result.event === "success") {
+      console.log("Done uploading...", result.info);
+      uploadedPhotos.value.push(result.info);
+      emit("photos", uploadedPhotos.value);
     }
   }
-)
+);
 </script>
 
 <template>
   <button @click="widget.open()">Subir imágenes</button>
-  <p>{{ uploadedPhotos.map((u) => u.secure_url) }}</p>
-  <img
-    :key="u.id"
-    v-for="u in uploadedPhotos"
-    :src="u.secure_url.replace('/upload/', '/upload/c_crop,g_custom/')"
-    alt=""
-  />
+  <div class="thubnail-photos">
+    <img
+      :key="u.id"
+      v-for="u in uploadedPhotos"
+      :src="u.secure_url.replace('/upload/', '/upload/c_crop,g_custom/')"
+      alt="uploaded photo"
+    />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.thubnail-photos {
+  display: flex;
+  gap: 4px;
+}
+
+.thubnail-photos img {
+  width: 50px;
+}
+</style>

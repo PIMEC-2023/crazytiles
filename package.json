@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.6.1",
+    "@vueuse/sound": "^2.0.1",
     "cloudinary": "^1.41.0",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vue-confetti-explosion": "^1.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.0",
