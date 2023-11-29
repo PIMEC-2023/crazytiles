@@ -20,6 +20,7 @@ import apple from "@/assets/imgs/frutas/poma.svg";
 import redApple from "@/assets/imgs/frutas/poma-vermella.svg";
 import watermelon from "@/assets/imgs/frutas/sindria.svg";
 
+import iconSubmit from "@/assets/imgs/icon-submit-imgs.svg"
 
 defineProps({
   show: Boolean
@@ -91,7 +92,6 @@ const handleSubmit = () => {
 
                 <fieldset class="dificultat">
                   <legend class="headers">Dificultat</legend>
-                  <!-- <h2 class="headers">Dificultat</h2> -->
                   <ul>
                     <li>
                       <input id="facil" type="radio" value="easy" v-model="difficultySelected" name="dificultat">
@@ -115,7 +115,6 @@ const handleSubmit = () => {
               <slot name="so">
                 <fieldset class="so">
                   <legend class="headers">So</legend>
-                  <!-- <h2 class="headers">So</h2> -->
                   <ul>
                     <li>
                       <input id="on" type="radio" :value="true" v-model="soundSelected" name="so">
@@ -137,7 +136,6 @@ const handleSubmit = () => {
             <div>
               <fieldset class="tema">
                 <legend class="headers">Temàtica</legend>
-                <!-- <h2 class="headers">Temàtica</h2> -->
                 <ul>
                   <li>
                     <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected">
@@ -147,10 +145,10 @@ const handleSubmit = () => {
                     <input id="fruites" type="radio" value="fruits" name="tema" v-model="themeSelected">
                     <label for="fruites">Fruites</label>
                   </li>
-                  <!-- <li>
-                              <input id="images" type="radio" value="images" name="tema" v-model="themeSelected">
-                              <label for="images">Imatges</label>
-                            </li> -->
+                  <li>
+                    <input id="images" type="radio" value="images" name="tema" v-model="themeSelected">
+                    <label for="images">Imatges</label>
+                  </li>
                 </ul>
               </fieldset>
             </div>
@@ -159,10 +157,12 @@ const handleSubmit = () => {
             <div :style="{ visibility: themeSelected == 'images' ? 'visible' : 'hidden' }">
               <fieldset class="tema">
                 <legend class="headers">Personalitzar imatges</legend>
-                <!-- <h2 class="headers">Temàtica</h2> -->
                 <ul>
-                  <li>
-                    <input id="numeros" type="file">
+                  <li class="image-upload">
+                    <label for="file-input">
+                      <img class="down-icon" :src="iconSubmit" alt="">
+                    </label>
+                    <input id="file-input" type="file">
                   </li>
                 </ul>
               </fieldset>
@@ -295,6 +295,14 @@ input[type="radio"]:checked::before {
   /* Muestra el círculo central cuando el botón está marcado */
 }
 
+.down-icon {
+  width: 25px;
+  fill:var(--config-bg);
+}
+.image-upload > input {
+  display: none;
+}
+
 /* Estilo para el contenedor del botón */
 .button-container {
   display: flex;
@@ -315,4 +323,20 @@ input[type="radio"]:checked::before {
 .button-configuration:hover {
   background: var(--action-buttton-bg-hover);
 }
+
+/*Prueba*/
+@media screen and (min-width:360px) {
+  ul {
+    gap:10px;
+  }
+
+  li {
+    gap:10px;
+  }
+
+  .container {
+    font-size: 14px;
+  }
+}
+
 </style>
