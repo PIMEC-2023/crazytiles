@@ -26,10 +26,6 @@ export const changePage = (page) => {
 
 export const getCurrentPage = () => store.currentPage;
 
-export const setGameConfig = (difficulty, urlsArray, sound, themeSelected) => {
-  store.gameConfig = { difficulty, urlsArray, sound, themeSelected };
-};
-
 export const store = reactive({
   currentPage: pages["StartPage"],
   finalScore: {
@@ -41,8 +37,45 @@ export const store = reactive({
     urlsArray: [],
     sound: true,
     themeSelected: "numbers",
+    difficultyLevels: {
+      easy: {
+        x: 2,
+        y: 2,
+      },
+      medium: {
+        x: 4,
+        y: 6,
+      },
+      hard: {
+        x: 4,
+        y: 8,
+      },
+    },
   },
 });
+
+export const setGameConfig = (difficulty, urlsArray, sound, themeSelected) => {
+  store.gameConfig = {
+    difficulty,
+    urlsArray,
+    sound,
+    themeSelected,
+  };
+  store.gameConfig.difficultyLevels = {
+    easy: {
+      x: 2,
+      y: 2,
+    },
+    medium: {
+      x: 4,
+      y: 6,
+    },
+    hard: {
+      x: 4,
+      y: 8,
+    },
+  };
+};
 
 export const setUrlsPhotos = (photosArray) => {
   storage.value = photosArray;

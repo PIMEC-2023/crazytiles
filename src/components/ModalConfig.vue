@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { store, setGameConfig, setUrlsPhotos, getUrlPhotos } from "@/store.js";
 import UploadWidget from "@/components/UploadWidget.vue";
 
+import crossIcon from "@/assets/imgs/circle-xmark-solid.svg";
 import strawberry from "@/assets/imgs/frutas/maduixa.svg";
 import banana from "@/assets/imgs/frutas/platan.svg";
 import orange from "@/assets/imgs/frutas/taronja.svg";
@@ -94,6 +95,11 @@ const handleUploadedPhotos = (uploadedPhotos) => {
     u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
   );
   photosUrls.value = [...photosUrls.value, ...newPhotos];
+  setUrlsPhotos(photosUrls.value);
+};
+
+const removeImage = (image) => {
+  photosUrls.value = photosUrls.value.filter((img) => img !== image);
   setUrlsPhotos(photosUrls.value);
 };
 
@@ -252,12 +258,23 @@ onMounted(() => {
                   </li>
                   <li>
                     <div class="thumbnail-photos">
-                      <img
+                      <div
+                        class="thumbnail-container"
                         :key="u.id"
                         v-for="u in photosUrls"
-                        :src="u"
-                        alt="uploaded photo"
-                      />
+                      >
+                        <img
+                          @click="removeImage(u)"
+                          class="remove-icon"
+                          :src="crossIcon"
+                          alt="remove img"
+                        />
+                        <img
+                          class="thumbnail-img"
+                          alt="uploaded photo"
+                          :src="u"
+                        />
+                      </div>
                     </div>
                     <!-- <div>{{ storage }}</div> -->
                   </li>
@@ -414,10 +431,21 @@ input[type="radio"]:checked::before {
 
 .thumbnail-photos {
   display: flex;
-  gap: 4px;
+  gap: 6px;
 }
 
-.thumbnail-photos img {
+.thumbnail-img {
   width: 60px;
+}
+
+.thumbnail-container {
+  position: relative;
+}
+
+.remove-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 15px;
 }
 </style>

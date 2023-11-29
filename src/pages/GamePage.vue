@@ -2,22 +2,26 @@
 import GameBoard from "@/components/GameBoard.vue";
 import { changePage, store } from "@/store";
 
-
 const handleEndGame = (totalTime, attempts) => {
-    console.log(totalTime, attempts);
-    changePage('VictoryPage');
-    store.finalScore.elapsedTime = totalTime;
-    store.finalScore.attempts = attempts;
+  console.log(totalTime, attempts);
+  changePage("VictoryPage");
+  store.finalScore.elapsedTime = totalTime;
+  store.finalScore.attempts = attempts;
 };
 </script>
 
 <template>
-    <div>
-        <!-- <GameBoard difficulty="easy" :urls-array="fruitsArray" /> -->
-        <GameBoard :audio="store.gameConfig.sound" :difficulty="store.gameConfig.difficulty"
-            :urls-array="store.gameConfig.urlsArray" @game-ended="handleEndGame" />
-        <!-- <GameBoard difficulty="easy" :urls-array="uploadedPhotos" /> -->
-    </div>
+  <div>
+    <!-- <GameBoard difficulty="easy" :urls-array="fruitsArray" /> -->
+    <GameBoard
+      :audio="store.gameConfig.sound"
+      :difficulty="store.gameConfig.difficulty"
+      :difficulty-levels="store.gameConfig.difficultyLevels"
+      :urls-array="store.gameConfig.urlsArray"
+      @game-ended="handleEndGame"
+    />
+    <!-- <GameBoard difficulty="easy" :urls-array="uploadedPhotos" /> -->
+  </div>
 </template>
 
 <style scoped></style>

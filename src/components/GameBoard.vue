@@ -6,8 +6,7 @@ import CardTile from "./CardTile.vue";
 import GameScore from "./GameScore.vue";
 import GameTimer from "./GameTimer.vue";
 
-import { board } from "@/utils.js";
-import { formatTime } from "@/utils.js";
+import { board, formatTime } from "@/utils.js";
 
 import errorAudio from "@/assets/audio/error.mp3";
 import flipCardAudio from "@/assets/audio/flipcard.mp3";
@@ -20,6 +19,7 @@ const props = defineProps({
   audio: Boolean,
   difficulty: String,
   urlsArray: Array,
+  difficultyLevels: Object
 });
 
 const emit = defineEmits(["gameEnded"]);
@@ -40,21 +40,6 @@ const victoryAudioSound = useSound(victoryAudio, {
   volume: 0.3,
   soundEnabled: props.audio,
 });
-
-const difficultyLevels = {
-  easy: {
-    x: 2,
-    y: 2,
-  },
-  medium: {
-    x: 4,
-    y: 6,
-  },
-  hard: {
-    x: 4,
-    y: 8,
-  },
-};
 
 const dimensionsX = ref(null);
 const dimensionsY = ref(null);
@@ -150,7 +135,7 @@ const handleCounter = () => {
 };
 
 onMounted(() => {
-  const { x, y } = difficultyLevels[props.difficulty];
+  const { x, y } = props.difficultyLevels[props.difficulty];
   dimensionsX.value = x;
   dimensionsY.value = y;
   newGame();
