@@ -7,14 +7,15 @@ export const shuffleArray = (array) => {
   }
 };
 
+// TODO refactorizar
 export const board = (x, y, arrayImgs) => {
   const tilesArray = [];
   const totalTiles = x * y;
-  if (arrayImgs) {
+  if (arrayImgs.length !== 0) {
     shuffleArray(arrayImgs);
   }
   for (let i = 0; i < totalTiles / 2; i++) {
-    if (!arrayImgs) {
+    if (arrayImgs.length === 0) {
       tilesArray.push(i);
     } else {
       tilesArray.push(arrayImgs[i]);

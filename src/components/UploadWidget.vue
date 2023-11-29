@@ -26,7 +26,7 @@ const widget = window.cloudinary.createUploadWidget(
 </script>
 
 <template>
-  <div @click="widget.open()">
+  <div @click.stop="widget.open()">
     <slot />
   </div>
 </template>

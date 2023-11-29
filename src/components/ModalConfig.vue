@@ -1,6 +1,8 @@
 <script setup>
-import { ref } from "vue";
-import { store, setGameConfig } from "@/store.js"
+import { onMounted, ref } from "vue";
+import { store, setGameConfig, setUrlsPhotos, getUrlPhotos } from "@/store.js";
+import UploadWidget from "@/components/UploadWidget.vue";
+
 import strawberry from "@/assets/imgs/frutas/maduixa.svg";
 import banana from "@/assets/imgs/frutas/platan.svg";
 import orange from "@/assets/imgs/frutas/taronja.svg";
@@ -20,14 +22,11 @@ import apple from "@/assets/imgs/frutas/poma.svg";
 import redApple from "@/assets/imgs/frutas/poma-vermella.svg";
 import watermelon from "@/assets/imgs/frutas/sindria.svg";
 
-
 defineProps({
-  show: Boolean
+  show: Boolean,
 });
 
-const emit = defineEmits(['close'])
-
-
+const emit = defineEmits(["close"]);
 
 const fruitsArray = [
   strawberry,
@@ -47,8 +46,7 @@ const fruitsArray = [
   pineapple,
   apple,
   redApple,
-  watermelon
-
+  watermelon,
 ];
 
 const difficultySelected = ref(store.gameConfig.difficulty);
@@ -56,31 +54,64 @@ const soundSelected = ref(store.gameConfig.sound);
 const themeSelected = ref(store.gameConfig.themeSelected);
 
 const handleSubmit = () => {
-  console.log("Configuració formulari: ", difficultySelected.value, soundSelected.value, themeSelected.value);
+  console.log(
+    "Configuració formulari: ",
+    difficultySelected.value,
+    soundSelected.value,
+    themeSelected.value
+  );
 
-
-
-  if (themeSelected.value == 'fruits') {
-    setGameConfig(difficultySelected.value, fruitsArray, soundSelected.value, themeSelected.value)
-  } else if (themeSelected.value == 'numbers') {
-    setGameConfig(difficultySelected.value, undefined, soundSelected.value, themeSelected.value)
+  if (themeSelected.value == "fruits") {
+    setGameConfig(
+      difficultySelected.value,
+      fruitsArray,
+      soundSelected.value,
+      themeSelected.value
+    );
+  } else if (themeSelected.value == "numbers") {
+    setGameConfig(
+      difficultySelected.value,
+      [],
+      soundSelected.value,
+      themeSelected.value
+    );
+  } else if (themeSelected.value == "images") {
+    setGameConfig(
+      difficultySelected.value,
+      photosUrls.value,
+      soundSelected.value,
+      themeSelected.value
+    );
   }
 
-  emit('close');
+  emit("close");
+};
 
-}
+const photosUrls = ref(store.gameConfig.urlsArray);
 
+const handleUploadedPhotos = (uploadedPhotos) => {
+  const newPhotos = uploadedPhotos.map((u) =>
+    u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
+  );
+  photosUrls.value = [...photosUrls.value, ...newPhotos];
+  setUrlsPhotos(photosUrls.value);
+};
+
+onMounted(() => {
+  console.log("Ejecutando onMounted");
+  photosUrls.value = getUrlPhotos();
+});
 </script>
 
 <template>
   <Transition name="modal">
-  <div v-if="show" class="modal-mask">
-    <div class="modal-container">
-      <div class="modal-menu">
+    <div v-if="show" class="modal-mask">
+      <div class="modal-container">
+        <div class="modal-menu">
           <!-- creu -->
           <div class="modal-header">
             <button class="modal-default-button" @click="$emit('close')">
-              <img src="../assets/imgs/icon-menu-close.svg" alt="">
+              <img src="../assets/imgs/icon-menu-close.svg" alt="" />
             </button>
           </div>
           <!-- Inicio FORM -->
@@ -88,26 +119,42 @@ const handleSubmit = () => {
             <!-- dficultat -->
             <div>
               <slot name="dificultat">
-
                 <fieldset class="dificultat">
                   <legend class="headers">Dificultat</legend>
                   <!-- <h2 class="headers">Dificultat</h2> -->
                   <ul>
                     <li>
-                      <input id="facil" type="radio" value="easy" v-model="difficultySelected" name="dificultat">
+                      <input
+                        id="facil"
+                        type="radio"
+                        value="easy"
+                        v-model="difficultySelected"
+                        name="dificultat"
+                      />
                       <label for="facil">Fàcil</label>
                     </li>
                     <li>
-                      <input id="mitjana" type="radio" value="medium" v-model="difficultySelected" name="dificultat">
+                      <input
+                        id="mitjana"
+                        type="radio"
+                        value="medium"
+                        v-model="difficultySelected"
+                        name="dificultat"
+                      />
                       <label for="mitjana">Mitjana</label>
                     </li>
                     <li>
-                      <input id="dificil" type="radio" value="hard" v-model="difficultySelected" name="dificultat">
+                      <input
+                        id="dificil"
+                        type="radio"
+                        value="hard"
+                        v-model="difficultySelected"
+                        name="dificultat"
+                      />
                       <label for="dificil">Difícil</label>
                     </li>
                   </ul>
                 </fieldset>
-
               </slot>
             </div>
             <!-- so -->
@@ -118,15 +165,30 @@ const handleSubmit = () => {
                   <!-- <h2 class="headers">So</h2> -->
                   <ul>
                     <li>
-                      <input id="on" type="radio" :value="true" v-model="soundSelected" name="so">
+                      <input
+                        id="on"
+                        type="radio"
+                        :value="true"
+                        v-model="soundSelected"
+                        name="so"
+                      />
                       <label for="on">On</label>
                     </li>
                     <li>
-                      <input id="off" type="radio" :value="false" v-model="soundSelected" name="so">
+                      <input
+                        id="off"
+                        type="radio"
+                        :value="false"
+                        v-model="soundSelected"
+                        name="so"
+                      />
                       <label for="off">Off</label>
                     </li>
                     <li>
-                      <span>El so està: {{ soundSelected ? 'activat' : 'desactivat' }}</span>
+                      <span
+                        >El so està:
+                        {{ soundSelected ? "activat" : "desactivat" }}</span
+                      >
                     </li>
                   </ul>
                 </fieldset>
@@ -140,29 +202,64 @@ const handleSubmit = () => {
                 <!-- <h2 class="headers">Temàtica</h2> -->
                 <ul>
                   <li>
-                    <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected">
+                    <input
+                      id="numeros"
+                      type="radio"
+                      value="numbers"
+                      name="tema"
+                      v-model="themeSelected"
+                    />
                     <label for="numeros">Números</label>
                   </li>
                   <li>
-                    <input id="fruites" type="radio" value="fruits" name="tema" v-model="themeSelected">
+                    <input
+                      id="fruites"
+                      type="radio"
+                      value="fruits"
+                      name="tema"
+                      v-model="themeSelected"
+                    />
                     <label for="fruites">Fruites</label>
                   </li>
-                  <!-- <li>
-                              <input id="images" type="radio" value="images" name="tema" v-model="themeSelected">
-                              <label for="images">Imatges</label>
-                            </li> -->
+                  <li>
+                    <input
+                      id="images"
+                      type="radio"
+                      value="images"
+                      name="tema"
+                      v-model="themeSelected"
+                    />
+                    <label for="images">Imatges</label>
+                  </li>
                 </ul>
               </fieldset>
             </div>
 
             <!-- imatges -->
-            <div :style="{ visibility: themeSelected == 'images' ? 'visible' : 'hidden' }">
+            <div
+              :style="{
+                visibility: themeSelected == 'images' ? 'visible' : 'hidden',
+              }"
+            >
               <fieldset class="tema">
                 <legend class="headers">Personalitzar imatges</legend>
                 <!-- <h2 class="headers">Temàtica</h2> -->
                 <ul>
                   <li>
-                    <input id="numeros" type="file">
+                    <UploadWidget @photos="handleUploadedPhotos">
+                      <div>Pujar imatges</div>
+                    </UploadWidget>
+                  </li>
+                  <li>
+                    <div class="thumbnail-photos">
+                      <img
+                        :key="u.id"
+                        v-for="u in photosUrls"
+                        :src="u"
+                        alt="uploaded photo"
+                      />
+                    </div>
+                    <!-- <div>{{ storage }}</div> -->
                   </li>
                 </ul>
               </fieldset>
@@ -172,7 +269,6 @@ const handleSubmit = () => {
             <div class="button-container">
               <button class="button-configuration">Guardar Configuració</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -198,7 +294,7 @@ const handleSubmit = () => {
   max-width: 360px;
   width: 100%;
   margin: 0 auto;
-  font-family: 'Inter', Helvetica, Arial;
+  font-family: "Inter", Helvetica, Arial;
   font-weight: 500;
   font-size: 18px;
 }
@@ -314,5 +410,14 @@ input[type="radio"]:checked::before {
 
 .button-configuration:hover {
   background: var(--action-buttton-bg-hover);
+}
+
+.thumbnail-photos {
+  display: flex;
+  gap: 4px;
+}
+
+.thumbnail-photos img {
+  width: 60px;
 }
 </style>

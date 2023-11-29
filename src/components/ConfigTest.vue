@@ -33,11 +33,12 @@ const fruitsArray = [
 
 const photosUrls = ref([]);
 
-const key = "localStorage";
+const key = "uploadedPhotos";
 
 const { storage } = useLocalStorage(key);
 
 const handleUploadedPhotos = (uploadedPhotos) => {
+  // mirar si es necesario
   storage.value = [];
   photosUrls.value = uploadedPhotos.map((u) =>
     u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
@@ -53,19 +54,19 @@ const handleUploadedPhotos = (uploadedPhotos) => {
       <button>Subir imágenes</button>
     </UploadWidget>
   </div>
-  <div class="thubnail-photos">
+  <div class="thumbnail-photos">
     <img :key="u.id" v-for="u in photosUrls" :src="u" alt="uploaded photo" />
   </div>
   <div>{{ storage }}</div>
 </template>
 
 <style scoped>
-.thubnail-photos {
+.thumbnail-photos {
   display: flex;
   gap: 4px;
 }
 
-.thubnail-photos img {
+.thumbnail-photos img {
   width: 50px;
 }
 </style>
