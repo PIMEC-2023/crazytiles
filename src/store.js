@@ -21,8 +21,8 @@ export const changePage = (page) => {
 
 export const getCurrentPage = () => store.currentPage
 
-export const setGameConfig = (difficulty, urlsArray, sound) => {
-  store.gameConfig = {difficulty, urlsArray, sound}
+export const setGameConfig = (difficulty, urlsArray, sound, themeSelected) => {
+  store.gameConfig = {difficulty, urlsArray, sound, themeSelected}
 }
 
 export const store = reactive({
@@ -32,9 +32,10 @@ export const store = reactive({
     attempts: undefined
   },
   gameConfig: {
-    difficulty: 'medium', // 'easy' | 'medium' | 'hard'
-    urlsArray: [],
+    difficulty: 'easy', // 'easy' | 'medium' | 'hard'
+    urlsArray: undefined,
     sound: true,
+    themeSelected: "numbers"
 
   }
 })

@@ -2,32 +2,32 @@
 
 :root {
   --white: #ffffff;
-  --black:#161920;
+  --black: #161920;
 
   --initial-and-game-bg: #FEF5CC;
   --config-bg: #02C4AC;
-  
+
   /*Guardar config, nou joc*/
-  --action-button-bg:#1747E7;
-  --action-buttton-bg-hover:#1239b9;
-  
+  --action-button-bg: #1747E7;
+  --action-buttton-bg-hover: #1239b9;
+
   /*Restart button*/
-  --restart-button-type-color:#1747E7;
-  --restart-button-bg:rgba(209,213,219,0.5);
-  --restart-button-bg-hover:rgba(209,213,219,1);
+  --restart-button-type-color: #1747E7;
+  --restart-button-bg: rgba(209, 213, 219, 0.5);
+  --restart-button-bg-hover: rgba(209, 213, 219, 1);
 
   /*Stats*/
-  --game-stats-bg:#FDBE11;
-  --time-type-color:#1747E7;
-  --time-box-border:#FDBE11;
+  --game-stats-bg: #FDBE11;
+  --time-type-color: #1747E7;
+  --time-box-border: #FDBE11;
 
   /*Good Ending*/
-  --ge-bg:#d1dafa;
-  --ge-h1:#F75A2D; 
+  --ge-bg: #d1dafa;
+  --ge-h1: #F75A2D;
 
   /*Bad Ending*/
-  --be-bg:#fa9c81;
-  --be-h1:#1747E7;
+  --be-bg: #fa9c81;
+  --be-h1: #1747E7;
 }
 
 *,
@@ -49,11 +49,16 @@ body {
   background: #f1f1f1;
   transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
-  
+
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: var(--black);
 }
 
 
@@ -71,7 +76,7 @@ body {
 
 .palette {
   display: flex;
-  gap:20px;
+  gap: 20px;
 }
 
 .box {
@@ -79,10 +84,10 @@ body {
   justify-content: center;
   align-items: center;
 
-  border:1px solid black;
+  border: 1px solid black;
   height: 100px;
   width: 100px;
-  color:white;
+  color: white;
 }
 
 .blue {
