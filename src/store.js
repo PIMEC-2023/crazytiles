@@ -37,22 +37,23 @@ export const store = reactive({
     urlsArray: [],
     sound: true,
     themeSelected: "numbers",
-    difficultyLevels: {
-      easy: {
-        x: 2,
-        y: 2,
-      },
-      medium: {
-        x: 4,
-        y: 6,
-      },
-      hard: {
-        x: 4,
-        y: 8,
-      },
-    },
   },
 });
+
+export const difficultyLevels = {
+  easy: {
+    x: 2,
+    y: 2,
+  },
+  medium: {
+    x: 4,
+    y: 6,
+  },
+  hard: {
+    x: 4,
+    y: 8,
+  },
+};
 
 export const setGameConfig = (difficulty, urlsArray, sound, themeSelected) => {
   store.gameConfig = {
@@ -60,20 +61,6 @@ export const setGameConfig = (difficulty, urlsArray, sound, themeSelected) => {
     urlsArray,
     sound,
     themeSelected,
-  };
-  store.gameConfig.difficultyLevels = {
-    easy: {
-      x: 2,
-      y: 2,
-    },
-    medium: {
-      x: 4,
-      y: 6,
-    },
-    hard: {
-      x: 4,
-      y: 8,
-    },
   };
 };
 

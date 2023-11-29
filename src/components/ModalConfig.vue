@@ -22,6 +22,8 @@ import pineapple from "@/assets/imgs/frutas/pinya.svg";
 import apple from "@/assets/imgs/frutas/poma.svg";
 import redApple from "@/assets/imgs/frutas/poma-vermella.svg";
 import watermelon from "@/assets/imgs/frutas/sindria.svg";
+import { difficultyLevels } from "../store";
+import { shuffleArray } from "../utils";
 
 defineProps({
   show: Boolean,
@@ -77,6 +79,13 @@ const handleSubmit = () => {
       themeSelected.value
     );
   } else if (themeSelected.value == "images") {
+    const remainingImgs = remainingPhotos();
+    console.log(remainingImgs);
+    if (remainingImgs !== 0) {
+      for (let i = 0; i < remainingImgs; i++) {
+        photosUrls.value.push(fruitsArray[i]);
+      }
+    }
     setGameConfig(
       difficultySelected.value,
       photosUrls.value,
@@ -101,6 +110,15 @@ const handleUploadedPhotos = (uploadedPhotos) => {
 const removeImage = (image) => {
   photosUrls.value = photosUrls.value.filter((img) => img !== image);
   setUrlsPhotos(photosUrls.value);
+};
+
+const remainingPhotos = () => {
+  return (
+    (difficultyLevels[difficultySelected.value].x *
+      difficultyLevels[difficultySelected.value].y) /
+      2 -
+    photosUrls.value.length
+  );
 };
 
 onMounted(() => {
@@ -276,7 +294,9 @@ onMounted(() => {
                         />
                       </div>
                     </div>
-                    <!-- <div>{{ storage }}</div> -->
+                  </li>
+                  <li>
+                    <p>Et falten per pujar {{ remainingPhotos() }} fotos</p>
                   </li>
                 </ul>
               </fieldset>

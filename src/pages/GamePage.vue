@@ -1,6 +1,6 @@
 <script setup>
 import GameBoard from "@/components/GameBoard.vue";
-import { changePage, store } from "@/store";
+import { changePage, store, difficultyLevels } from "@/store";
 
 const handleEndGame = (totalTime, attempts) => {
   console.log(totalTime, attempts);
@@ -16,7 +16,7 @@ const handleEndGame = (totalTime, attempts) => {
     <GameBoard
       :audio="store.gameConfig.sound"
       :difficulty="store.gameConfig.difficulty"
-      :difficulty-levels="store.gameConfig.difficultyLevels"
+      :difficulty-levels="difficultyLevels"
       :urls-array="store.gameConfig.urlsArray"
       @game-ended="handleEndGame"
     />
