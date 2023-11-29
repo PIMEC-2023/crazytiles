@@ -1,38 +1,3 @@
-# crazytiles
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
 
 # ![CrazyTiles Logo](https://github.com/PIMEC-2023/crazytiles/blob/gegebe-patch-1/src/assets/imgs/logo-crazyTiles.svg)
 
@@ -115,6 +80,39 @@ Proyecto desarrollado por el equipo Macedonia.
 - Isotipo en [Flaticon](https://www.flaticon.es/iconos-gratis/ensalada-de-frutas)
 - Iconos de frutas por [Freepik](https://www.freepik.com/free-vector/flat-design-fruit-collection_13643341.htm#fromView=search&term=set+fruits&page=1&position=12&track=ais&regularType=vector) y [Freepik](https://www.freepik.com/free-vector/flat-design-fruit-collection_13643341.htm#fromView=search&term=set+fruits&page=1&position=12&track=ais&regularType=vector)
 - Crédito de los sonidos, de haberlo.
+
+## Recommended IDE Setup
+
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
+
 
 
 ## Licencia
