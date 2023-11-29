@@ -5,44 +5,34 @@
 # crazyTiles - Juego de Memoria
 
 Bienvenidos a CrazyTiles! Experimenta una emocionante aventura digital que potencia tu memoria y habilidades visuales a través de un divertido juego de parejas. Diseñado para ser intuitivo y fácil de usar. 
-
 Te ofrecemos la oportunidad única de personalizar tu experiencia al máximo, permitíendote cargar tus propias fotos. ¿Qué mejor manera de disfrutar y compartir desafiando a tu círculo de amigos y familiares?
+
+[Jugar ahora!](https://crazytiles.vercel.app/)
 
 ## Características
 
 - **Tres niveles de dificultad:**
-  - Fácil: x cartas
-  - Medio: x cartas
-  - Difícil: x cartas
+  - Fácil: 12 cartas
+  - Medio: 24 cartas
+  - Difícil: 36 cartas
 
 - **Opciones de Cartas:**
   - Números
   - Frutas
   - Personalizado (sube tus propias fotos)
 
-- **Opciones de Sonido:**
-  - Mute
-  - Original
-  - Arcade
- 
 ## Tecnologías Utilizadas
 
 - **Vue.js:** Utilizado para el desarrollo de la interfaz de usuario.
 - **HTML:** Lenguaje de marcado para la estructura de la aplicación.
 - **CSS:** Utilizado para el diseño y estilo.
 - **JavaScript:** Lenguaje de programación para la funcionalidad del juego.
-- **Bootstrap:** Framework de diseño para una interfaz más amigable.
+- **Bootstrap:** Framework usado en la landing page de diseño para una interfaz más amigable.
 
 ## Diseño
 
 El diseño de la aplicación fue realizado en [Figma](https://www.figma.com/).
 Este es el [prototipo](Enlace final aquí). 
-
-## Instalación
-
-1. Clona este repositorio: `git clone https://github.com/tu-usuario/crazyTiles.git`
-2. Navega al directorio del proyecto: `cd crazyTiles`
-3. Abre el archivo `index.html` en tu navegador o despliega la aplicación en tu servidor.
 
 ## Uso
 
