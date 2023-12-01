@@ -31,7 +31,7 @@ defineProps(["isRevealed", 'isDisabled']);
   background: transparent;
 }
 
-@media screen and (min-width:360px){
+@media screen and (min-width:360px) and (max-width:480px){
   .card-tile {
     width: 80px;
     height: 80px;
