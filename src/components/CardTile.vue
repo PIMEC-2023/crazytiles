@@ -4,7 +4,7 @@ defineProps(["isRevealed", 'isDisabled']);
 </script>
 
 <template>
-  <div>
+  <div class="card-tile">
     <button :disabled="isDisabled" class="tile" :class="{ revealed: isRevealed }">
       <span v-show="isRevealed" class="card">
         <slot />
@@ -14,7 +14,7 @@ defineProps(["isRevealed", 'isDisabled']);
 </template>
 
 <style scoped>
-div {
+.card-tile {
   width: 100px;
   height: 100px;
 }
@@ -30,4 +30,12 @@ div {
 .revealed {
   background: transparent;
 }
+
+@media screen and (min-width:360px){
+  .card-tile {
+    width: 80px;
+    height: 80px;
+  }
+}
+
 </style>
