@@ -18,6 +18,8 @@ import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
 
 import fullScreenIcon from "@/assets/imgs/icon-full_screen.svg";
+import activeSoundIcon from "@/assets/imgs/icon-active-sound.svg";
+//import mutedSoundIcon from "@/assets/imgs/icon-muted-sound.svg"; 
 
 const props = defineProps({
   audio: Boolean,
@@ -152,8 +154,12 @@ onMounted(() => {
     <div class="main-page-game">
       <div style="display: flex;">
         <GameTimer ref="counter" />
-        <button @click="toggleFullScreen" style="padding-top: auto; padding-left: 10px;"><img :src="fullScreenIcon"
-            alt=""></button>
+        <button class="back-color">
+          <img :src="activeSoundIcon" alt="Active sound">
+        </button>
+        <button @click="toggleFullScreen" class="back-color" style="padding-top: auto; padding-left: 10px;">
+          <img :src="fullScreenIcon" alt="full screen">
+        </button>
       </div>
 
       <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
@@ -208,5 +214,8 @@ span.card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+button.back-color {
+  background-color: transparent;
 }
 </style>
