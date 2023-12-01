@@ -92,8 +92,8 @@ const handleSubmit = () => {
   } else if (themeSelected.value == "images") {
     if (remainingPhotos.value !== 0) {
       shuffleArray(fruitsArray);
-      for (let i = 0; i < remainingPhotos.value; i++) {
-        photosUrls.value.push(fruitsArray[i]);
+      while (remainingPhotos.value !== 0) {
+        photosUrls.value.push(fruitsArray[remainingPhotos.value]);
       }
     }
     setGameConfig(
@@ -266,8 +266,13 @@ onMounted(() => {
               <fieldset class="tema">
                 <legend class="headers">Personalitzar imatges</legend>
                 <ul>
-                  <li>
+                  <li class="image-upload">
                     <UploadWidget @photos="handleUploadedPhotos">
+                      <img
+                        class="down-icon"
+                        :src="iconSubmit"
+                        alt="pujar imatges"
+                      />
                       <div>Pujar imatges</div>
                     </UploadWidget>
                   </li>
@@ -292,16 +297,14 @@ onMounted(() => {
                       </div>
                     </div>
                   </li>
-                  <li>
-                    <p>Et falten per pujar {{ remainingPhotos }} fotos</p>
-                  </li>
-                  <li class="image-upload">
-                    <label for="file-input">
-                      <img class="down-icon" :src="iconSubmit" alt="" />
-                    </label>
-                    <input id="file-input" type="file" />
-                  </li>
                 </ul>
+                <p v-show="remainingPhotos >= 0">
+                  Et falten per pujar
+                  <span>{{ remainingPhotos }}</span> foto<span
+                    v-show="remainingPhotos != 1"
+                    >s</span
+                  >
+                </p>
               </fieldset>
             </div>
 
