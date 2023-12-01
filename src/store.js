@@ -71,7 +71,7 @@ export const store = shallowReactive({
   },
   gameConfig: {
     difficulty: "easy", // 'easy' | 'medium' | 'hard'
-    urlsArray: [],
+    uploadedImgs: [],
     sound: true,
     themeSelected: "numbers",
   },
@@ -94,13 +94,13 @@ export const difficultyLevels = {
 
 export const setGameConfig = (
   difficulty,
-  urlsArray,
+  uploadedImgs,
   sound,
   themeSelected
 ) => {
   store.gameConfig = {
     difficulty,
-    urlsArray,
+    uploadedImgs,
     sound,
     themeSelected,
   };
@@ -108,7 +108,7 @@ export const setGameConfig = (
 
 export const setUrlsPhotos = (photosArray) => {
   storage.value = photosArray;
-  store.gameConfig.urlsArray = photosArray;
+  store.gameConfig.uploadedImgs = photosArray;
 };
 
 export const getUrlPhotos = () => {

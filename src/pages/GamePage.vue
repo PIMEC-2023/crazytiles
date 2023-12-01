@@ -11,11 +11,11 @@ const handleEndGame = (totalTime, attempts) => {
   store.finalScore.attempts = attempts;
 };
 
-const handleUrlsArray = computed(() => {
+const handleUploadedImgs = computed(() => {
   if (store.gameConfig.themeSelected === "fruits") {
     return fruitsArray;
   } else if (store.gameConfig.themeSelected === "images") {
-    return store.gameConfig.urlsArray;
+    return store.gameConfig.uploadedImgs;
   } else {
     return [];
   }
@@ -28,7 +28,7 @@ const handleUrlsArray = computed(() => {
       :audio="store.gameConfig.sound"
       :difficulty="store.gameConfig.difficulty"
       :difficulty-levels="difficultyLevels"
-      :urls-array="handleUrlsArray"
+      :urls-array="handleUploadedImgs"
       @game-ended="handleEndGame"
     />
   </div>

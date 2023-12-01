@@ -70,7 +70,7 @@ const handleSubmit = () => {
       soundSelected.value,
       themeSelected.value
     );
-    photosUrls.value = store.gameConfig.urlsArray;
+    photosUrls.value = store.gameConfig.uploadedImgs;
   }
   emit("close");
 };
