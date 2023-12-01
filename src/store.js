@@ -14,7 +14,7 @@ const pages = {
   VictoryPage,
 };
 
-import { reactive } from "vue";
+import { shallowReactive } from "vue";
 
 /**
  *
@@ -26,8 +26,8 @@ export const changePage = (page) => {
 
 export const getCurrentPage = () => store.currentPage;
 
-export const store = reactive({
-  currentPage: pages["StartPage"],
+export const store = shallowReactive({
+  currentPage:  pages["StartPage"],
   finalScore: {
     elapsedTime: undefined,
     attempts: undefined,
