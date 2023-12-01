@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { store, setGameConfig, setUrlsPhotos, getUrlPhotos } from "@/store.js";
 import UploadWidget from "@/components/UploadWidget.vue";
 
@@ -56,6 +56,15 @@ const difficultySelected = ref(store.gameConfig.difficulty);
 const soundSelected = ref(store.gameConfig.sound);
 const themeSelected = ref(store.gameConfig.themeSelected);
 
+const remainingPhotos = computed(() => {
+  return (
+    (difficultyLevels[difficultySelected.value].x *
+      difficultyLevels[difficultySelected.value].y) /
+      2 -
+    photosUrls.value.length
+  );
+});
+
 const handleSubmit = () => {
   console.log(
     "Configuració formulari: ",
@@ -79,10 +88,9 @@ const handleSubmit = () => {
       themeSelected.value
     );
   } else if (themeSelected.value == "images") {
-    const remainingImgs = remainingPhotos();
-    console.log(remainingImgs);
-    if (remainingImgs !== 0) {
-      for (let i = 0; i < remainingImgs; i++) {
+    if (remainingPhotos.value !== 0) {
+      shuffleArray(fruitsArray);
+      for (let i = 0; i < remainingPhotos.value; i++) {
         photosUrls.value.push(fruitsArray[i]);
       }
     }
@@ -110,15 +118,6 @@ const handleUploadedPhotos = (uploadedPhotos) => {
 const removeImage = (image) => {
   photosUrls.value = photosUrls.value.filter((img) => img !== image);
   setUrlsPhotos(photosUrls.value);
-};
-
-const remainingPhotos = () => {
-  return (
-    (difficultyLevels[difficultySelected.value].x *
-      difficultyLevels[difficultySelected.value].y) /
-      2 -
-    photosUrls.value.length
-  );
 };
 
 onMounted(() => {
@@ -296,7 +295,7 @@ onMounted(() => {
                     </div>
                   </li>
                   <li>
-                    <p>Et falten per pujar {{ remainingPhotos() }} fotos</p>
+                    <p>Et falten per pujar {{ remainingPhotos }} fotos</p>
                   </li>
                 </ul>
               </fieldset>
