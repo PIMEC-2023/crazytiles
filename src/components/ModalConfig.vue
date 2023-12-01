@@ -1,27 +1,16 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
-import { store, setGameConfig, setUrlsPhotos, getUrlPhotos } from "@/store.js";
+import {
+  store,
+  setGameConfig,
+  setUrlsPhotos,
+  getUrlPhotos,
+  fruitsArray,
+} from "@/store.js";
 import UploadWidget from "@/components/UploadWidget.vue";
 
 import crossIcon from "@/assets/imgs/circle-xmark-solid.svg";
-import strawberry from "@/assets/imgs/frutas/maduixa.svg";
-import banana from "@/assets/imgs/frutas/platan.svg";
-import orange from "@/assets/imgs/frutas/taronja.svg";
-import peach from "@/assets/imgs/frutas/pressec.svg";
-import blueberries from "@/assets/imgs/frutas/nabius.svg";
-import pear from "@/assets/imgs/frutas/pera.svg";
-import cherries from "@/assets/imgs/frutas/cireres.svg";
-import lemon from "@/assets/imgs/frutas/llimona.svg";
-import grapes from "@/assets/imgs/frutas/raim.svg";
-import kiwi from "@/assets/imgs/frutas/kiwi.svg";
-import avocado from "@/assets/imgs/frutas/avocat.svg";
-import raspberries from "@/assets/imgs/frutas/gerds.svg";
-import pomegranate from "@/assets/imgs/frutas/magrana.svg";
-import redCurrant from "@/assets/imgs/frutas/nabius-vermells.svg";
-import pineapple from "@/assets/imgs/frutas/pinya.svg";
-import apple from "@/assets/imgs/frutas/poma.svg";
-import redApple from "@/assets/imgs/frutas/poma-vermella.svg";
-import watermelon from "@/assets/imgs/frutas/sindria.svg";
+
 import { difficultyLevels } from "../store";
 import { shuffleArray } from "../utils";
 
@@ -32,27 +21,6 @@ defineProps({
 });
 
 const emit = defineEmits(["close"]);
-
-const fruitsArray = [
-  strawberry,
-  banana,
-  orange,
-  peach,
-  blueberries,
-  pear,
-  cherries,
-  lemon,
-  grapes,
-  kiwi,
-  avocado,
-  raspberries,
-  pomegranate,
-  redCurrant,
-  pineapple,
-  apple,
-  redApple,
-  watermelon,
-];
 
 const difficultySelected = ref(store.gameConfig.difficulty);
 const soundSelected = ref(store.gameConfig.sound);
@@ -74,17 +42,17 @@ const handleSubmit = () => {
     soundSelected.value,
     themeSelected.value
   );
-
   if (themeSelected.value == "fruits") {
     setGameConfig(
       difficultySelected.value,
-      fruitsArray,
+      [],
       soundSelected.value,
       themeSelected.value
     );
   } else if (themeSelected.value == "numbers") {
     setGameConfig(
       difficultySelected.value,
+      [],
       [],
       soundSelected.value,
       themeSelected.value
@@ -102,12 +70,12 @@ const handleSubmit = () => {
       soundSelected.value,
       themeSelected.value
     );
+    photosUrls.value = store.gameConfig.urlsArray;
   }
-
   emit("close");
 };
 
-const photosUrls = ref(store.gameConfig.urlsArray);
+const photosUrls = ref([]);
 
 const handleUploadedPhotos = (uploadedPhotos) => {
   const newPhotos = uploadedPhotos.map((u) =>
@@ -298,7 +266,7 @@ onMounted(() => {
                     </div>
                   </li>
                 </ul>
-                <p v-show="remainingPhotos >= 0">
+                <p v-show="remainingPhotos > 0">
                   Et falten per pujar
                   <span>{{ remainingPhotos }}</span> foto<span
                     v-show="remainingPhotos != 1"
