@@ -10,11 +10,11 @@ export const shuffleArray = (array) => {
   export const board = (x, y, arrayImgs) => {
     const tilesArray = [];
     const totalTiles = x * y;
-    if (arrayImgs) {
+    if (arrayImgs.length != 0) {
       shuffleArray(arrayImgs);
     }
     for (let i = 0; i < totalTiles / 2; i++) {
-      if (!arrayImgs) {
+      if (arrayImgs.length==0) {
         tilesArray.push(i);
       } else {
         tilesArray.push(arrayImgs[i]);
@@ -22,6 +22,7 @@ export const shuffleArray = (array) => {
     }
     tilesArray.push(...tilesArray);
     shuffleArray(tilesArray);
+    console.log("🚀 ~ file: utils.js:25 ~ board ~ tilesArray:", tilesArray)
     return tilesArray;
   };
   
