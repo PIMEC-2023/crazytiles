@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 
 const emit = defineEmits(["photos"]);
 
@@ -28,12 +28,8 @@ const widget = window.cloudinary.createUploadWidget(
 <template>
   <button @click="widget.open()">Subir imágenes</button>
   <div class="thubnail-photos">
-    <img
-      :key="u.id"
-      v-for="u in uploadedPhotos"
-      :src="u.secure_url.replace('/upload/', '/upload/c_crop,g_custom/')"
-      alt="uploaded photo"
-    />
+    <img :key="u.id" v-for="u in uploadedPhotos" :src="u.secure_url.replace('/upload/', '/upload/c_crop,g_custom/')"
+      alt="uploaded photo" />
   </div>
 </template>
 
