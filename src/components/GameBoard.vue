@@ -18,6 +18,8 @@ import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
 
 import fullScreenIcon from "@/assets/imgs/icon-full_screen.svg";
+import activeSoundIcon from "@/assets/imgs/icon-active-sound.svg";
+//import mutedSoundIcon from "@/assets/imgs/icon-muted-sound.svg"; 
 
 const props = defineProps({
   audio: Boolean,
@@ -27,10 +29,19 @@ const props = defineProps({
 
 const emit = defineEmits(["gameEnded"]);
 
-const errorAudioSound = useSound(errorAudio, { volume: 0.1, soundEnabled: props.audio })
-const flipCardAudioSound = useSound(flipCardAudio, { volume: 0.1, soundEnabled: props.audio })
-const successAudioSound = useSound(successAudio, { volume: 0.4, soundEnabled: props.audio })
-const victoryAudioSound = useSound(victoryAudio, { volume: 0.3, soundEnabled: props.audio })
+// variable de estado para controlar si el audio está activado o no
+const audioOn = ref(props.audio)
+
+const errorAudioSound = useSound(errorAudio, { volume: 0.1, soundEnabled: audioOn.value })
+const flipCardAudioSound = useSound(flipCardAudio, { volume: 0.1, soundEnabled: audioOn.value })
+const successAudioSound = useSound(successAudio, { volume: 0.4, soundEnabled: audioOn.value })
+const victoryAudioSound = useSound(victoryAudio, { volume: 0.3, soundEnabled: audioOn.value })
+
+const playAudio = (audio) => {
+  if (audioOn.value) {
+    audio.play()
+  }
+}
 
 const difficultyLevels = {
   easy: {
@@ -97,7 +108,7 @@ const checkCards = (card, index) => {
     selectedCards.value.addCard(card);
   }
 
-  flipCardAudioSound.play()
+  playAudio(flipCardAudioSound);
 
   //   playAudio(flipCardAudio, 0.1);
 
@@ -108,15 +119,15 @@ const checkCards = (card, index) => {
     isTimeoutActive = true;
     setTimeout(() => {
       if (matches.value.length * 2 === cards.value.length) {
-        victoryAudioSound.play();
+        playAudio(victoryAudioSound);
         let totalTime = handleCounter();
         emit('gameEnded', totalTime, attempts.value)
         exitFullScreen();
         return
       }
       matches.value.includes(card)
-        ? successAudioSound.play()
-        : errorAudioSound.play();
+        ? playAudio(successAudioSound)
+        : playAudio(errorAudioSound)
       firstSelectedCardIndex.value = null;
       secondSelectedCardIndex.value = null;
       isTimeoutActive = false;
@@ -152,18 +163,21 @@ onMounted(() => {
     <div class="main-page-game">
       <div style="display: flex;">
         <GameTimer ref="counter" />
-        <button @click="toggleFullScreen" style="padding-top: auto; padding-left: 10px;"><img :src="fullScreenIcon"
-            alt=""></button>
+        <button class="back-color">
+          <img :src="activeSoundIcon" alt="Active sound">
+        </button>
+        <button @click="toggleFullScreen" class="back-color" style="padding-top: auto; padding-left: 10px;">
+          <img :src="fullScreenIcon" alt="full screen">
+        </button>
       </div>
 
       <section class="game" :style="{ gridTemplateColumns: 'auto '.repeat(dimensionsX) }">
         <article v-for="(card, index) in cards" :key="index">
           <div>
-            <CardTile :is-revealed="
-              firstSelectedCardIndex === index ||
+            <CardTile :is-revealed="firstSelectedCardIndex === index ||
               secondSelectedCardIndex === index
-            " :is-disabled="matches.includes(card)" :style="disappearCard(card)" @click="checkCards(card, index)">
-              <span v-if="!urlsArray">{{ card }}</span>
+              " :is-disabled="matches.includes(card)" :style="disappearCard(card)" @click="checkCards(card, index)">
+              <span v-if="urlsArray.length == 0">{{ card }}</span>
               <img v-else :src="card" />
               <!-- :alt="card.substr(24)" -->
             </CardTile>
@@ -208,5 +222,9 @@ span.card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+button.back-color {
+  background-color: transparent;
 }
 </style>
