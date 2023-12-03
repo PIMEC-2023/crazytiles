@@ -45,7 +45,7 @@ export const fruitsArray = [
 ];
 
 const key = "uploadedPhotos";
-const { storage } = useLocalStorage(key);
+const { storage } = useLocalStorage(key, []);
 
 const pages = {
   StartPage,
@@ -112,6 +112,8 @@ export const setUrlsPhotos = (photosArray) => {
 };
 
 export const getUrlPhotos = () => {
-
+  if (storage.value == 'undefined') {
+    return []
+  }
   return storage.value;
 };
