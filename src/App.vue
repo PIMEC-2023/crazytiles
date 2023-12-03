@@ -1,6 +1,7 @@
 <script setup>
 import { getCurrentPage } from "@/store";
 import NavBurguer from "./components/NavBurguer.vue";
+
 </script>
 
 <template>
