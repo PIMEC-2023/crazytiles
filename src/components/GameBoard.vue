@@ -19,7 +19,7 @@ const props = defineProps({
   audio: Boolean,
   difficulty: String,
   urlsArray: Array,
-  difficultyLevels: Object
+  difficultyLevels: Object,
 });
 
 const emit = defineEmits(["gameEnded"]);
@@ -171,8 +171,7 @@ onMounted(() => {
               @click="checkCards(card, index)"
             >
               <span v-if="urlsArray.length === 0">{{ card }}</span>
-              <img v-else :src="card" />
-              <!-- :alt="card.substr(24)" -->
+              <img v-else :src="card" :alt="card.substr(24)" />
             </CardTile>
           </div>
         </article>

@@ -237,14 +237,14 @@ onMounted(() => {
                 <legend class="headers">Personalitzar imatges</legend>
                 <ul>
                   <li class="image-upload">
-                    <UploadWidget @photos="handleUploadedPhotos">
+                    <!-- <UploadWidget @photos="handleUploadedPhotos">
                       <img
                         class="down-icon"
                         :src="iconSubmit"
                         alt="pujar imatges"
                       />
                       <div>Pujar imatges</div>
-                    </UploadWidget>
+                    </UploadWidget> -->
                   </li>
                   <li>
                     <div class="thumbnail-photos">
