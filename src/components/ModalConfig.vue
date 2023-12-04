@@ -30,7 +30,7 @@ const remainingPhotos = computed(() => {
   return (
     (difficultyLevels[difficultySelected.value].x *
       difficultyLevels[difficultySelected.value].y) /
-      2 -
+    2 -
     photosUrls.value.length
   );
 });
@@ -53,24 +53,25 @@ const handleSubmit = () => {
     setGameConfig(
       difficultySelected.value,
       [],
-      [],
       soundSelected.value,
       themeSelected.value
     );
   } else if (themeSelected.value == "images") {
-    if (remainingPhotos.value !== 0) {
+    let mixedArrayPhotos = [...photosUrls.value]
+    console.log("🚀 ~ file: ModalConfig.vue:62 ~ handleSubmit ~ mixedArrayPhotos:", mixedArrayPhotos)
+
+    if (remainingPhotos.value > 0) {
       shuffleArray(fruitsArray);
-      while (remainingPhotos.value !== 0) {
-        photosUrls.value.push(fruitsArray[remainingPhotos.value]);
-      }
+      mixedArrayPhotos = mixedArrayPhotos.concat(fruitsArray.slice(0, remainingPhotos.value))
+      console.log("🚀 ~ file: ModalConfig.vue:66 ~ handleSubmit ~ fruitsArray.slice(0, remainingPhotos.value:", fruitsArray.slice(0, remainingPhotos.value))
     }
     setGameConfig(
       difficultySelected.value,
-      photosUrls.value,
+      mixedArrayPhotos,
       soundSelected.value,
       themeSelected.value
     );
-    photosUrls.value = store.gameConfig.uploadedImgs;
+    //photosUrls.value = store.gameConfig.uploadedImgs;
   }
   emit("close");
 };
@@ -116,33 +117,15 @@ onMounted(() => {
                   <legend class="headers">Dificultat</legend>
                   <ul>
                     <li>
-                      <input
-                        id="facil"
-                        type="radio"
-                        value="easy"
-                        v-model="difficultySelected"
-                        name="dificultat"
-                      />
+                      <input id="facil" type="radio" value="easy" v-model="difficultySelected" name="dificultat" />
                       <label for="facil">Fàcil</label>
                     </li>
                     <li>
-                      <input
-                        id="mitjana"
-                        type="radio"
-                        value="medium"
-                        v-model="difficultySelected"
-                        name="dificultat"
-                      />
+                      <input id="mitjana" type="radio" value="medium" v-model="difficultySelected" name="dificultat" />
                       <label for="mitjana">Mitjana</label>
                     </li>
                     <li>
-                      <input
-                        id="dificil"
-                        type="radio"
-                        value="hard"
-                        v-model="difficultySelected"
-                        name="dificultat"
-                      />
+                      <input id="dificil" type="radio" value="hard" v-model="difficultySelected" name="dificultat" />
                       <label for="dificil">Difícil</label>
                     </li>
                   </ul>
@@ -156,30 +139,16 @@ onMounted(() => {
                   <legend class="headers">So</legend>
                   <ul>
                     <li>
-                      <input
-                        id="on"
-                        type="radio"
-                        :value="true"
-                        v-model="soundSelected"
-                        name="so"
-                      />
+                      <input id="on" type="radio" :value="true" v-model="soundSelected" name="so" />
                       <label for="on">On</label>
                     </li>
                     <li>
-                      <input
-                        id="off"
-                        type="radio"
-                        :value="false"
-                        v-model="soundSelected"
-                        name="so"
-                      />
+                      <input id="off" type="radio" :value="false" v-model="soundSelected" name="so" />
                       <label for="off">Off</label>
                     </li>
                     <li>
-                      <span
-                        >El so està:
-                        {{ soundSelected ? "activat" : "desactivat" }}</span
-                      >
+                      <span>El so està:
+                        {{ soundSelected ? "activat" : "desactivat" }}</span>
                     </li>
                   </ul>
                 </fieldset>
@@ -192,33 +161,15 @@ onMounted(() => {
                 <legend class="headers">Temàtica</legend>
                 <ul>
                   <li>
-                    <input
-                      id="numeros"
-                      type="radio"
-                      value="numbers"
-                      name="tema"
-                      v-model="themeSelected"
-                    />
+                    <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected" />
                     <label for="numeros">Números</label>
                   </li>
                   <li>
-                    <input
-                      id="fruites"
-                      type="radio"
-                      value="fruits"
-                      name="tema"
-                      v-model="themeSelected"
-                    />
+                    <input id="fruites" type="radio" value="fruits" name="tema" v-model="themeSelected" />
                     <label for="fruites">Fruites</label>
                   </li>
                   <li>
-                    <input
-                      id="images"
-                      type="radio"
-                      value="images"
-                      name="tema"
-                      v-model="themeSelected"
-                    />
+                    <input id="images" type="radio" value="images" name="tema" v-model="themeSelected" />
                     <label for="images">Imatges</label>
                   </li>
                 </ul>
@@ -226,52 +177,30 @@ onMounted(() => {
             </div>
 
             <!-- imatges -->
-            <div
-              :style="{
-                visibility: themeSelected == 'images' ? 'visible' : 'hidden',
-              }"
-            >
+            <div :style="{
+              visibility: themeSelected == 'images' ? 'visible' : 'hidden',
+            }">
               <fieldset class="tema">
                 <legend class="headers">Personalitzar imatges</legend>
                 <ul>
                   <li class="image-upload">
                     <UploadWidget @photos="handleUploadedPhotos">
-                      <img
-                        class="down-icon"
-                        :src="iconSubmit"
-                        alt="pujar imatges"
-                      />
+                      <img class="down-icon" :src="iconSubmit" alt="pujar imatges" />
                       <div>Pujar imatges</div>
                     </UploadWidget>
                   </li>
                   <li>
                     <div class="thumbnail-photos">
-                      <div
-                        class="thumbnail-container"
-                        :key="u.id"
-                        v-for="u in photosUrls"
-                      >
-                        <img
-                          @click="removeImage(u)"
-                          class="remove-icon"
-                          :src="crossIcon"
-                          alt="remove img"
-                        />
-                        <img
-                          class="thumbnail-img"
-                          alt="uploaded photo"
-                          :src="u"
-                        />
+                      <div class="thumbnail-container" :key="u.id" v-for="u in photosUrls">
+                        <img @click="removeImage(u)" class="remove-icon" :src="crossIcon" alt="remove img" />
+                        <img class="thumbnail-img" alt="uploaded photo" :src="u" />
                       </div>
                     </div>
                   </li>
                 </ul>
                 <p v-show="remainingPhotos > 0">
                   Et falten per pujar
-                  <span>{{ remainingPhotos }}</span> foto<span
-                    v-show="remainingPhotos != 1"
-                    >s</span
-                  >
+                  <span>{{ remainingPhotos }}</span> foto<span v-show="remainingPhotos != 1">s</span>
                 </p>
               </fieldset>
             </div>
@@ -406,7 +335,8 @@ input[type="radio"]:checked::before {
   width: 25px;
   fill: var(--config-bg);
 }
-.image-upload > input {
+
+.image-upload>input {
   display: none;
 }
 
@@ -450,6 +380,7 @@ input[type="radio"]:checked::before {
   right: -5px;
   width: 15px;
 }
+
 /*Prueba*/
 @media screen and (min-width: 360px) {
   ul {
