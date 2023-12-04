@@ -11,6 +11,10 @@ const handleEndGame = (totalTime, attempts) => {
   store.finalScore.attempts = attempts;
 };
 
+const handleExitGame = () => {
+  changePage("StartPage");
+};
+
 const handleUploadedImgs = computed(() => {
   if (store.gameConfig.themeSelected === "fruits") {
     return fruitsArray;
@@ -30,6 +34,7 @@ const handleUploadedImgs = computed(() => {
       :difficulty-levels="difficultyLevels"
       :urls-array="handleUploadedImgs"
       @game-ended="handleEndGame"
+      @exit-game="handleExitGame"
     />
   </div>
 </template>

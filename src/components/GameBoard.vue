@@ -14,6 +14,7 @@ import successAudio from "@/assets/audio/success_bell.mp3";
 import victoryAudio from "@/assets/audio/victory.mp3";
 
 import fullScreenIcon from "@/assets/imgs/icon-full_screen.svg";
+import gameExitIcon from "@/assets/imgs/icon-menu-close.svg";
 
 const props = defineProps({
   audio: Boolean,
@@ -22,7 +23,7 @@ const props = defineProps({
   difficultyLevels: Object,
 });
 
-const emit = defineEmits(["gameEnded"]);
+const emit = defineEmits(["gameEnded", "exitGame"]);
 
 const errorAudioSound = useSound(errorAudio, {
   volume: 0.1,
@@ -134,6 +135,10 @@ const handleCounter = () => {
   return `${formatTime(min)}:${formatTime(sec)}`;
 };
 
+const handleExitButton = () => {
+  emit("exitGame");
+};
+
 onMounted(() => {
   const { x, y } = props.difficultyLevels[props.difficulty];
   dimensionsX.value = x;
@@ -145,12 +150,18 @@ onMounted(() => {
 <template>
   <main>
     <div class="main-page-game">
-      <div style="display: flex">
+      <div
+        style="
+          display: grid;
+          grid-template-columns: auto max-content auto;
+          width: 90%;
+        "
+      >
+        <button @click="handleExitButton">
+          <img :src="gameExitIcon" alt="exit" style="display: flex; align-items: center;" />
+        </button>
         <GameTimer ref="counter" />
-        <button
-          @click="toggleFullScreen"
-          style="padding-top: auto; padding-left: 10px"
-        >
+        <button @click="toggleFullScreen">
           <img :src="fullScreenIcon" alt="" />
         </button>
       </div>
