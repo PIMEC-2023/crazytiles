@@ -186,7 +186,7 @@ onMounted(() => {
                   <li class="image-upload">
                     <UploadWidget @photos="handleUploadedPhotos">
                       <img class="down-icon" :src="iconSubmit" alt="pujar imatges" />
-                      <div>Pujar imatges</div>
+                      <!-- <div>Pujar imatges</div> -->
                     </UploadWidget>
                   </li>
                   <li>
@@ -198,10 +198,13 @@ onMounted(() => {
                     </div>
                   </li>
                 </ul>
-                <p v-show="remainingPhotos > 0">
-                  Et falten per pujar
-                  <span>{{ remainingPhotos }}</span> foto<span v-show="remainingPhotos != 1">s</span>
-                </p>
+                <div style="text-align: left;" v-show="remainingPhotos > 0">
+                  <p>Puja les teves propies fotos per jugar</p>
+                  <p>
+                    Encara pots pujar
+                    <span>{{ remainingPhotos }}</span> foto<span v-show="remainingPhotos != 1">s</span>
+                  </p>
+                </div>
               </fieldset>
             </div>
 
