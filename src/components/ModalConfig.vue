@@ -91,8 +91,10 @@ const removeImage = (image) => {
 };
 
 onMounted(() => {
-  console.log("Ejecutando onMounted");
   photosUrls.value = getUrlPhotos();
+  photosUrls.value = photosUrls.value.filter(
+    (url) => !fruitsArray.includes(url)
+  );
 });
 </script>
 
