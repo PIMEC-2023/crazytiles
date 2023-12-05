@@ -1,6 +1,9 @@
 <script setup>
 
-defineProps(["isRevealed", 'isDisabled']);
+defineProps({
+  isDisabled: Boolean,
+  isRevealed: Boolean
+});
 </script>
 
 <template>
@@ -31,11 +34,10 @@ defineProps(["isRevealed", 'isDisabled']);
   background: transparent;
 }
 
-@media screen and (min-width:360px) and (max-width:480px){
+@media screen and (min-width:360px) and (max-width:480px) {
   .card-tile {
     width: 80px;
     height: 80px;
   }
 }
-
 </style>

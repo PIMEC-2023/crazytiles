@@ -1,13 +1,19 @@
-// vite.config.js
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
+import Vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-    // ...
+    plugins: [Vue()],
+    // ... otras configuraciones de Vite
     test: {
-        // enable jest-like global test APIs
+        // Activar API de prueba global similar a jest
         globals: true,
-        // simulate DOM with happy-dom
-        // (requires installing happy-dom as a peer dependency)
-        environment: 'happy-dom'
+    },
+    environment: 'happy-dom',
+    resolve: {
+        alias: {
+            '@': '/src'
+        }
     }
-})
+
+
+});
