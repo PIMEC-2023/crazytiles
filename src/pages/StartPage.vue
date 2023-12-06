@@ -1,19 +1,15 @@
 <script setup>
 import { changePage } from "@/store";
 import NavConfig from "@/components/NavConfig.vue";
-
 </script>
 
 <template>
   <main>
-
-
     <div id="optionAccess">
       <img src="../assets/imgs/logo-isotype.svg" alt="" class="logo-iso">
       <button @click="changePage('GamePage')" id="button__start">Iniciar el joc</button>
       <!-- <div id="button__config">Configuració</div> -->
       <NavConfig />
-
     </div>
   </main>
 </template>
