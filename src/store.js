@@ -79,8 +79,8 @@ export const store = shallowReactive({
 
 export const difficultyLevels = {
   easy: {
-    x: 2,
-    y: 2,
+    x: 4,
+    y: 3,
   },
   medium: {
     x: 4,
