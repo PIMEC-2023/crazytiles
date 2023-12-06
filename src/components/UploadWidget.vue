@@ -26,20 +26,9 @@ const widget = window.cloudinary.createUploadWidget(
 </script>
 
 <template>
-  <button @click="widget.open()">Subir imágenes</button>
-  <div class="thubnail-photos">
-    <img :key="u.id" v-for="u in uploadedPhotos" :src="u.secure_url.replace('/upload/', '/upload/c_crop,g_custom/')"
-      alt="uploaded photo" />
+  <div @click.stop="widget.open()">
+    <slot />
   </div>
 </template>
 
-<style scoped>
-.thubnail-photos {
-  display: flex;
-  gap: 4px;
-}
-
-.thubnail-photos img {
-  width: 50px;
-}
-</style>
+<style scoped></style>

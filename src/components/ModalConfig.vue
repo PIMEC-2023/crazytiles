@@ -1,87 +1,111 @@
 <script setup>
-import { ref } from "vue";
-import { store, setGameConfig } from "@/store.js"
-import strawberry from "@/assets/imgs/frutas/maduixa.svg";
-import banana from "@/assets/imgs/frutas/platan.svg";
-import orange from "@/assets/imgs/frutas/taronja.svg";
-import peach from "@/assets/imgs/frutas/pressec.svg";
-import blueberries from "@/assets/imgs/frutas/nabius.svg";
-import pear from "@/assets/imgs/frutas/pera.svg";
-import cherries from "@/assets/imgs/frutas/cireres.svg";
-import lemon from "@/assets/imgs/frutas/llimona.svg";
-import grapes from "@/assets/imgs/frutas/raim.svg";
-import kiwi from "@/assets/imgs/frutas/kiwi.svg";
-import avocado from "@/assets/imgs/frutas/avocat.svg";
-import raspberries from "@/assets/imgs/frutas/gerds.svg";
-import pomegranate from "@/assets/imgs/frutas/magrana.svg";
-import redCurrant from "@/assets/imgs/frutas/nabius-vermells.svg";
-import pineapple from "@/assets/imgs/frutas/pinya.svg";
-import apple from "@/assets/imgs/frutas/poma.svg";
-import redApple from "@/assets/imgs/frutas/poma-vermella.svg";
-import watermelon from "@/assets/imgs/frutas/sindria.svg";
+import { onMounted, ref, computed } from "vue";
+import {
+  store,
+  setGameConfig,
+  setUrlsPhotos,
+  getUrlPhotos,
+  fruitsArray,
+} from "@/store.js";
+import UploadWidget from "@/components/UploadWidget.vue";
 
-import iconSubmit from "@/assets/imgs/icon-submit-imgs.svg"
+import crossIcon from "@/assets/imgs/circle-xmark-solid.svg";
+
+import { difficultyLevels } from "../store";
+import { shuffleArray } from "../utils";
+
+import iconSubmit from "@/assets/imgs/icon-submit-imgs.svg";
 
 defineProps({
-  show: Boolean
+  show: Boolean,
 });
 
-const emit = defineEmits(['close'])
-
-
-
-const fruitsArray = [
-  strawberry,
-  banana,
-  orange,
-  peach,
-  blueberries,
-  pear,
-  cherries,
-  lemon,
-  grapes,
-  kiwi,
-  avocado,
-  raspberries,
-  pomegranate,
-  redCurrant,
-  pineapple,
-  apple,
-  redApple,
-  watermelon
-
-];
+const emit = defineEmits(["close"]);
 
 const difficultySelected = ref(store.gameConfig.difficulty);
 const soundSelected = ref(store.gameConfig.sound);
 const themeSelected = ref(store.gameConfig.themeSelected);
 
+const remainingPhotos = computed(() => {
+  return (
+    (difficultyLevels[difficultySelected.value].x *
+      difficultyLevels[difficultySelected.value].y) /
+    2 -
+    photosUrls.value.length
+  );
+});
+
 const handleSubmit = () => {
-  console.log("Configuració formulari: ", difficultySelected.value, soundSelected.value, themeSelected.value);
+  console.log(
+    "Configuració formulari: ",
+    difficultySelected.value,
+    soundSelected.value,
+    themeSelected.value
+  );
+  if (themeSelected.value == "fruits") {
+    setGameConfig(
+      difficultySelected.value,
+      [],
+      soundSelected.value,
+      themeSelected.value
+    );
+  } else if (themeSelected.value == "numbers") {
+    setGameConfig(
+      difficultySelected.value,
+      [],
+      soundSelected.value,
+      themeSelected.value
+    );
+  } else if (themeSelected.value == "images") {
+    let mixedArrayPhotos = [...photosUrls.value]
+    console.log("🚀 ~ file: ModalConfig.vue:62 ~ handleSubmit ~ mixedArrayPhotos:", mixedArrayPhotos)
 
-
-
-  if (themeSelected.value == 'fruits') {
-    setGameConfig(difficultySelected.value, fruitsArray, soundSelected.value, themeSelected.value)
-  } else if (themeSelected.value == 'numbers') {
-    setGameConfig(difficultySelected.value, undefined, soundSelected.value, themeSelected.value)
+    if (remainingPhotos.value > 0) {
+      shuffleArray(fruitsArray);
+      mixedArrayPhotos = mixedArrayPhotos.concat(fruitsArray.slice(0, remainingPhotos.value))
+      console.log("🚀 ~ file: ModalConfig.vue:66 ~ handleSubmit ~ fruitsArray.slice(0, remainingPhotos.value:", fruitsArray.slice(0, remainingPhotos.value))
+    }
+    setGameConfig(
+      difficultySelected.value,
+      mixedArrayPhotos,
+      soundSelected.value,
+      themeSelected.value
+    );
+    //photosUrls.value = store.gameConfig.uploadedImgs;
   }
+  emit("close");
+};
 
-  emit('close');
+const photosUrls = ref([]);
 
-}
+const handleUploadedPhotos = (uploadedPhotos) => {
+  const newPhotos = uploadedPhotos.map((u) =>
+    u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
+  );
+  photosUrls.value = [...photosUrls.value, ...newPhotos];
+  setUrlsPhotos(photosUrls.value);
+};
 
+const removeImage = (image) => {
+  photosUrls.value = photosUrls.value.filter((img) => img !== image);
+  setUrlsPhotos(photosUrls.value);
+};
+
+onMounted(() => {
+  console.log("Ejecutando onMounted");
+  photosUrls.value = getUrlPhotos();
+});
 </script>
 
 <template>
   <Transition name="modal">
-  <div v-if="show" class="modal-mask">
-    <div class="modal-container">
-      <div class="modal-menu">
+    <div v-if="show" class="modal-mask">
+      <div class="modal-container">
+        <div class="modal-menu">
           <!-- creu -->
           <div class="modal-header">
             <button class="modal-default-button" @click="$emit('close')">
-              <img src="../assets/imgs/icon-menu-close.svg" alt="">
+              <img src="../assets/imgs/icon-menu-close.svg" alt="" />
             </button>
           </div>
           <!-- Inicio FORM -->
@@ -89,25 +113,23 @@ const handleSubmit = () => {
             <!-- dficultat -->
             <div>
               <slot name="dificultat">
-
                 <fieldset class="dificultat">
                   <legend class="headers">Dificultat</legend>
                   <ul>
                     <li>
-                      <input id="facil" type="radio" value="easy" v-model="difficultySelected" name="dificultat">
+                      <input id="facil" type="radio" value="easy" v-model="difficultySelected" name="dificultat" />
                       <label for="facil">Fàcil</label>
                     </li>
                     <li>
-                      <input id="mitjana" type="radio" value="medium" v-model="difficultySelected" name="dificultat">
+                      <input id="mitjana" type="radio" value="medium" v-model="difficultySelected" name="dificultat" />
                       <label for="mitjana">Mitjana</label>
                     </li>
                     <li>
-                      <input id="dificil" type="radio" value="hard" v-model="difficultySelected" name="dificultat">
+                      <input id="dificil" type="radio" value="hard" v-model="difficultySelected" name="dificultat" />
                       <label for="dificil">Difícil</label>
                     </li>
                   </ul>
                 </fieldset>
-
               </slot>
             </div>
             <!-- so -->
@@ -117,15 +139,16 @@ const handleSubmit = () => {
                   <legend class="headers">So</legend>
                   <ul>
                     <li>
-                      <input id="on" type="radio" :value="true" v-model="soundSelected" name="so">
+                      <input id="on" type="radio" :value="true" v-model="soundSelected" name="so" />
                       <label for="on">On</label>
                     </li>
                     <li>
-                      <input id="off" type="radio" :value="false" v-model="soundSelected" name="so">
+                      <input id="off" type="radio" :value="false" v-model="soundSelected" name="so" />
                       <label for="off">Off</label>
                     </li>
                     <li>
-                      <span>El so està: {{ soundSelected ? 'activat' : 'desactivat' }}</span>
+                      <span>El so està:
+                        {{ soundSelected ? "activat" : "desactivat" }}</span>
                     </li>
                   </ul>
                 </fieldset>
@@ -138,15 +161,15 @@ const handleSubmit = () => {
                 <legend class="headers">Temàtica</legend>
                 <ul>
                   <li>
-                    <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected">
+                    <input id="numeros" type="radio" value="numbers" name="tema" v-model="themeSelected" />
                     <label for="numeros">Números</label>
                   </li>
                   <li>
-                    <input id="fruites" type="radio" value="fruits" name="tema" v-model="themeSelected">
+                    <input id="fruites" type="radio" value="fruits" name="tema" v-model="themeSelected" />
                     <label for="fruites">Fruites</label>
                   </li>
                   <li>
-                    <input id="images" type="radio" value="images" name="tema" v-model="themeSelected">
+                    <input id="images" type="radio" value="images" name="tema" v-model="themeSelected" />
                     <label for="images">Imatges</label>
                   </li>
                 </ul>
@@ -154,17 +177,34 @@ const handleSubmit = () => {
             </div>
 
             <!-- imatges -->
-            <div :style="{ visibility: themeSelected == 'images' ? 'visible' : 'hidden' }">
+            <div :style="{
+              visibility: themeSelected == 'images' ? 'visible' : 'hidden',
+            }">
               <fieldset class="tema">
                 <legend class="headers">Personalitzar imatges</legend>
                 <ul>
                   <li class="image-upload">
-                    <label for="file-input">
-                      <img class="down-icon" :src="iconSubmit" alt="">
-                    </label>
-                    <input id="file-input" type="file">
+                    <UploadWidget @photos="handleUploadedPhotos">
+                      <img class="down-icon" :src="iconSubmit" alt="pujar imatges" />
+                      <!-- <div>Pujar imatges</div> -->
+                    </UploadWidget>
+                  </li>
+                  <li>
+                    <div class="thumbnail-photos">
+                      <div class="thumbnail-container" :key="u.id" v-for="u in photosUrls">
+                        <img @click="removeImage(u)" class="remove-icon" :src="crossIcon" alt="remove img" />
+                        <img class="thumbnail-img" alt="uploaded photo" :src="u" />
+                      </div>
+                    </div>
                   </li>
                 </ul>
+                <div style="text-align: left;" v-show="remainingPhotos > 0">
+                  <p>Puja les teves propies fotos per jugar</p>
+                  <p>
+                    Encara pots pujar
+                    <span>{{ remainingPhotos }}</span> foto<span v-show="remainingPhotos != 1">s</span>
+                  </p>
+                </div>
               </fieldset>
             </div>
 
@@ -172,7 +212,6 @@ const handleSubmit = () => {
             <div class="button-container">
               <button class="button-configuration">Guardar Configuració</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -198,7 +237,7 @@ const handleSubmit = () => {
   max-width: 360px;
   width: 100%;
   margin: 0 auto;
-  font-family: 'Inter', Helvetica, Arial;
+  font-family: "Inter", Helvetica, Arial;
   font-weight: 500;
   font-size: 18px;
 }
@@ -297,9 +336,10 @@ input[type="radio"]:checked::before {
 
 .down-icon {
   width: 25px;
-  fill:var(--config-bg);
+  fill: var(--config-bg);
 }
-.image-upload > input {
+
+.image-upload>input {
   display: none;
 }
 
@@ -324,19 +364,38 @@ input[type="radio"]:checked::before {
   background: var(--action-buttton-bg-hover);
 }
 
+.thumbnail-photos {
+  display: flex;
+  gap: 6px;
+}
+
+.thumbnail-img {
+  width: 60px;
+}
+
+.thumbnail-container {
+  position: relative;
+}
+
+.remove-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 15px;
+}
+
 /*Prueba*/
-@media screen and (min-width:360px) {
+@media screen and (min-width: 360px) {
   ul {
-    gap:10px;
+    gap: 10px;
   }
 
   li {
-    gap:10px;
+    gap: 10px;
   }
 
   .container {
     font-size: 14px;
   }
 }
-
 </style>

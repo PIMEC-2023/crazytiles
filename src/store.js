@@ -1,20 +1,57 @@
-// store.js
+import { shallowReactive } from "vue";
+import { useLocalStorage } from "vue-composable";
 import StartPage from "@/pages/StartPage.vue";
 import GamePage from "@/pages/GamePage.vue";
 import VictoryPage from "@/pages/VictoryPage.vue";
-import { useLocalStorage } from "vue-composable";
+
+import strawberry from "@/assets/imgs/frutas/maduixa.svg";
+import banana from "@/assets/imgs/frutas/platan.svg";
+import orange from "@/assets/imgs/frutas/taronja.svg";
+import peach from "@/assets/imgs/frutas/pressec.svg";
+import blueberries from "@/assets/imgs/frutas/nabius.svg";
+import pear from "@/assets/imgs/frutas/pera.svg";
+import cherries from "@/assets/imgs/frutas/cireres.svg";
+import lemon from "@/assets/imgs/frutas/llimona.svg";
+import grapes from "@/assets/imgs/frutas/raim.svg";
+import kiwi from "@/assets/imgs/frutas/kiwi.svg";
+import avocado from "@/assets/imgs/frutas/avocat.svg";
+import raspberries from "@/assets/imgs/frutas/gerds.svg";
+import pomegranate from "@/assets/imgs/frutas/magrana.svg";
+import redCurrant from "@/assets/imgs/frutas/nabius-vermells.svg";
+import pineapple from "@/assets/imgs/frutas/pinya.svg";
+import apple from "@/assets/imgs/frutas/poma.svg";
+import redApple from "@/assets/imgs/frutas/poma-vermella.svg";
+import watermelon from "@/assets/imgs/frutas/sindria.svg";
+
+export const fruitsArray = [
+  strawberry,
+  banana,
+  orange,
+  peach,
+  blueberries,
+  pear,
+  cherries,
+  lemon,
+  grapes,
+  kiwi,
+  avocado,
+  raspberries,
+  pomegranate,
+  redCurrant,
+  pineapple,
+  apple,
+  redApple,
+  watermelon,
+];
 
 const key = "uploadedPhotos";
-
-const { storage } = useLocalStorage(key);
+const { storage } = useLocalStorage(key, []);
 
 const pages = {
   StartPage,
   GamePage,
   VictoryPage,
 };
-
-import { shallowReactive } from "vue";
 
 /**
  *
@@ -27,14 +64,14 @@ export const changePage = (page) => {
 export const getCurrentPage = () => store.currentPage;
 
 export const store = shallowReactive({
-  currentPage:  pages["StartPage"],
+  currentPage: pages["StartPage"],
   finalScore: {
     elapsedTime: undefined,
     attempts: undefined,
   },
   gameConfig: {
     difficulty: "easy", // 'easy' | 'medium' | 'hard'
-    urlsArray: [],
+    uploadedImgs: [],
     sound: true,
     themeSelected: "numbers",
   },
@@ -42,8 +79,8 @@ export const store = shallowReactive({
 
 export const difficultyLevels = {
   easy: {
-    x: 2,
-    y: 2,
+    x: 4,
+    y: 3,
   },
   medium: {
     x: 4,
@@ -55,10 +92,15 @@ export const difficultyLevels = {
   },
 };
 
-export const setGameConfig = (difficulty, urlsArray, sound, themeSelected) => {
+export const setGameConfig = (
+  difficulty,
+  uploadedImgs,
+  sound,
+  themeSelected
+) => {
   store.gameConfig = {
     difficulty,
-    urlsArray,
+    uploadedImgs,
     sound,
     themeSelected,
   };
@@ -66,14 +108,12 @@ export const setGameConfig = (difficulty, urlsArray, sound, themeSelected) => {
 
 export const setUrlsPhotos = (photosArray) => {
   storage.value = photosArray;
-  store.gameConfig.urlsArray = photosArray;
+  store.gameConfig.uploadedImgs = photosArray;
 };
 
 export const getUrlPhotos = () => {
-  if (storage.value == "undefined") {
-    console.log("estoy dentro del if: ", storage.value);
-    return [];
+  if (storage.value == 'undefined') {
+    return []
   }
-  console.log("estoy FUERA del if: ", storage.value);
   return storage.value;
 };
