@@ -8,13 +8,27 @@ import GameBoard from '../GameBoard.vue';
 test('Para nivel fácil. deberíamos ver 12 <article> generados correspondiente a las 12 cartas', async () => {
     // Defina una matriz de URLs de ejemplo
     const urlsArray = ['url1', 'url2', 'url3', 'url4', 'url5', 'url6'];
-
+    const difficultyLevels = {
+        easy: {
+            x: 4,
+            y: 3,
+        },
+        medium: {
+            x: 4,
+            y: 6,
+        },
+        hard: {
+            x: 4,
+            y: 8,
+        },
+    };
     // Monta el componente con las propiedades proporcionadas
     const wrapper = mount(GameBoard, {
         props: {
             urlsArray,
             difficulty: 'easy',
-            audio: false
+            audio: false,
+            difficultyLevels
         },
     });
     await wrapper.vm.$nextTick();
