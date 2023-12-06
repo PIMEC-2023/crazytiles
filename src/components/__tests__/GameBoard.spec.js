@@ -5,7 +5,7 @@ import { expect, test } from 'vitest';
 // Importa el componente que deseas probar
 import GameBoard from '../GameBoard.vue';
 
-test('Para nivel fácil. deberíamos ver 12 <article> generados correspondiente al as 12 cartas', async () => {
+test('Para nivel fácil. deberíamos ver 12 <article> generados correspondiente a las 12 cartas', async () => {
     // Defina una matriz de URLs de ejemplo
     const urlsArray = ['url1', 'url2', 'url3', 'url4', 'url5', 'url6'];
 
