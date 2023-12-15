@@ -84,7 +84,7 @@ const handleUploadedPhotos = (uploadedPhotos) => {
   );
   // Lo comento por https://github.com/PIMEC-2023/crazytiles/issues/49 
   // photosUrls.value = [...photosUrls.value, ...newPhotos];
-  photosUrls.value = newPhotos;
+  photosUrls.value = [...photosUrls.value, newPhotos.slice(-1)];
   setUrlsPhotos(photosUrls.value);
 };
 
