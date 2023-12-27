@@ -82,7 +82,9 @@ const handleUploadedPhotos = (uploadedPhotos) => {
   const newPhotos = uploadedPhotos.map((u) =>
     u.secure_url.replace("/upload/", "/upload/c_crop,g_custom/")
   );
-  photosUrls.value = [...photosUrls.value, ...newPhotos];
+  // Lo comento por https://github.com/PIMEC-2023/crazytiles/issues/49 
+  // photosUrls.value = [...photosUrls.value, ...newPhotos];
+  photosUrls.value = [...photosUrls.value, newPhotos.slice(-1)];
   setUrlsPhotos(photosUrls.value);
 };
 
